@@ -1,62 +1,65 @@
 # Build
 
+## The problem
+
 The naive clerk says "All 6 invoices paid. Done." Then you open the ledger. Four invoices are paid once. One is paid
-twice. One is not paid at all. The clerk did not lie on purpose. It trusted its own calls and never looked at the
+twice. One is not paid at all. The clerk did not lie on purpose. It trusted its own calls, and it never looked at the
 ledger, the system of record.
 
-In this part you build your own AI employee. You can use any language or framework. Each step is done only when
-three records agree that the work happened: the ledger, the world's write log and your traces. What the employee
-says is only a claim.
+In this part you build your own AI employee. You can use any language or framework. Each step is done only when three
+records agree that the work happened:
 
-For example, INV-2017 bills load L-1012 again under a new number. INV-2012 already billed that load for USD 2,675.
-The naive clerk pays both. Your employee checks the ledger, sees the first invoice, and opens a `DUPLICATE` dispute
-instead.
+1. The ledger.
+2. The world's write log.
+3. Your traces.
+
+What the employee says is only a claim.
+
+For example, INV-2017 bills load L-1012 again under a new number. INV-2012 already billed that load for USD 2,675. The
+naive clerk pays both. Your employee checks the ledger, sees the first invoice, and opens a `DUPLICATE` dispute instead.
 
 The part's deliverable is `bun run verify part build`.
 
 ## Why it matters
 
-Anthropic's engineering team says an agent's outcome is "the final state in the environment at the end of the
-trial". It is not what the agent says. A booking agent can say the flight is booked while no booking exists
+Anthropic's engineering team says an agent's outcome is "the final state in the environment at the end of the trial".
+It is not what the agent says. A booking agent can say the flight is booked, while no booking exists
 ([Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
-The same post explains pass^k. It means the share of runs where all k trials pass. Say an agent works 75% of the
-time. Then it passes 3 trials in a row only about 42% of the time. So every check here runs 3 fresh trials and needs
-all 3 to pass.
+The same post explains pass^k. It is the share of runs where all k trials pass. Say an agent works 75% of the time. Then
+it passes 3 trials in a row only about 42% of the time. So every check here runs 3 fresh trials, and it needs all 3 to pass.
 
-Approvals need the same care. In an Anthropic trial, expert analysts chose the option their agent leaned towards 86%
-of the time ([How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls)).
-So a click on "approve" is not enough. Your employee must check that the right person decided, inside their limit.
-For example, INV-2045 is for USD 6,200. Ravi may approve up to USD 5,000, so only Lena can approve it.
+Approvals need the same care. In one Anthropic trial, expert analysts chose the option their agent leaned towards 86% of
+the time ([How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls)). So a
+click on "approve" is not enough. Your employee must check that the right person decided, inside their limit. For
+example, INV-2045 is for USD 6,200. Ravi may approve up to USD 5,000, so only Lena can approve it.
 
 ## The loop you build
 
 ```mermaid
 flowchart LR
-  J[POST /jobs] --> R[Read tools: invoice, load, rate, proof of delivery]
-  R --> M[Maker drafts pay or dispute]
-  M --> C{Checker: does the evidence allow it?}
-  C -- no --> S[Stop with a reason]
-  C -- yes --> L{Over a limit?}
-  L -- yes --> A[GET /approvals: wait for Lena]
-  A -- approve --> W
-  A -- decline --> D[Declined, nothing written]
-  L -- no --> W[Write once with an Idempotency-Key]
-  W --> K[Read the ledger back]
-  K -- row is there --> OK[Report done]
-  K -- no row --> F[Report failed with the reason]
-  MEM[(Memory per tenant)] -.-> M
-  R -.->|every call| T[(traces/run_id.jsonl)]
+  Job[POST /jobs] --> Read[Read the evidence]
+  Read --> Draft[Maker drafts pay or dispute]
+  Draft --> Check{Checker: does the evidence allow it?}
+  Check -->|no| Stop[Stop with a reason]
+  Check -->|yes| Limit{Over a limit?}
+  Limit -->|yes| Wait[Wait for Lena in GET /approvals]
+  Wait -->|approve| Write
+  Wait -->|decline| Declined[Declined, nothing written]
+  Limit -->|no| Write[Write once, with an Idempotency-Key]
+  Write --> Verify[Read the ledger back]
+  Verify -->|row is there| Done[Report done]
+  Verify -->|no row| Failed[Report failed, with the reason]
 ```
 
-Read the diagram from left to right. A job comes in. Your employee reads the evidence. A maker drafts a decision,
-and a checker tests it. A payment over a limit waits for a person. Every write happens once, and then the employee
-reads the ledger to see if it landed.
+Read the diagram from left to right. A job comes in. Your employee reads the evidence. A maker drafts a decision, and a
+checker tests it. A payment over a limit waits for a person. Every write happens once. Then the employee reads the ledger
+to see whether the write landed.
 
 ## Steps
 
 Core steps make the one-day path. Every check starts your employee from `employee.toml`. It sends jobs over
-[contract version 1](../../reference/CONTRACT.md) and needs 3 of 3 fresh trials to pass.
+[contract version 1](../../reference/CONTRACT.md). Each check needs 3 of 3 fresh trials to pass.
 
 | Step                                                                                  | Minutes | Core          | The check reads                                                                      |
 | ------------------------------------------------------------------------------------- | ------- | ------------- | ------------------------------------------------------------------------------------ |
