@@ -2,22 +2,22 @@
 
 ## The problem
 
-KaaS Freight paid one load twice and lost USD 3,140. Before you build the clerk, decide what kind it is.
-Can code list every next step? Then build a workflow. Does each case need a different next step? Then the model
-decides, and code guards the lines it must not cross.
+KaaS Freight paid one load twice and lost USD 3,140. Before you build the clerk, decide what kind of thing it is.
 
-For example, `INV-2041` is clean, so you pay it. `INV-2028` bills detention, so you look for a signed delay. So
-the clerk is an agent.
+Ask one question: can code list every next step? If yes, build a workflow. If no, the model must decide the next step.
+Then code guards the lines the model must not cross.
 
-Allianz built Project Nemo for food spoilage claims under AUD 500. Seven agents pass the claim along, and a person
-makes the final payout decision. Allianz reports an 80% cut in processing and settlement time. That is an agentic
-system with a human on the last write.
+For example, `INV-2041` is clean, so the clerk pays it. `INV-2028` bills detention, so the clerk must look for a signed
+delay. The clerk cannot list every next step in advance. So the clerk is an agent.
+
+Allianz's Project Nemo passes food spoilage claims between seven agents. A person makes the final payout decision.
 
 ```mermaid
-flowchart LR
-  Q{Can code list every next step?} -->|yes| W[workflow: code decides]
-  Q -->|no| A[agent: the model decides]
-  A -->|work splits across employees| S[agentic system]
+flowchart TD
+  Q{Can code list every next step?} -->|yes| W[Workflow: code decides]
+  Q -->|no| A[Agent: the model decides]
+  A -->|work splits across employees| S[Agentic system: models hand work on]
+  S --> H[A person makes the last write]
 ```
 
 ## Your challenge
@@ -26,8 +26,7 @@ Fill in `map.md` for your employee. It has these sections:
 
 - `## Problem`: who pays, and a cost with a number.
 - `## Choice`: the first line is `workflow`, `agent` or `agentic system`.
-- `## Why`: with the line "Who decides the next step: code" or `the model`.
-- "## Starts by": optional.
+- `## Why`: the line "Who decides the next step: code" or "Who decides the next step: the model".
 
 | Employee                                    | What to place                                                    |
 | ------------------------------------------- | ---------------------------------------------------------------- |
@@ -47,7 +46,7 @@ Fill in `map.md` for your employee. It has these sections:
 
 - `map.md` has Problem, Choice and Why.
 - The Problem names a cost with a number.
-- The Choice and "Who decides the next step" agree: workflow with code, agent or agentic system with the model.
+- The Choice and the decider agree. Workflow goes with code. Agent or agentic system goes with the model.
 
 ```bash
 bun run verify place-it-on-the-map
@@ -70,6 +69,6 @@ The freight sample is in [solution/map.md](../solution/map.md).
 - **Workflow**: code picks every next step. The model may fill in a field.
 - **Agent**: the model picks the next tool to call.
 - **Agentic system**: several agents hand work to each other.
-- **Starts by**: what starts a job: a person, an event, a schedule or another agent.
+- **Starts by**: what starts a job. It can be a person, an event, a schedule or another agent.
 
-Sources: [Allianz, Project Nemo](https://www.allianz.com/en/mediacenter/news/articles/251103-when-the-storm-clears-so-should-the-claim-queue.html), read 2026-11-12.
+Source: [Allianz, Project Nemo](https://www.allianz.com/en/mediacenter/news/articles/251103-when-the-storm-clears-so-should-the-claim-queue.html), read 2026-11-12.

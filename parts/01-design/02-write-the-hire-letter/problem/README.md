@@ -2,36 +2,40 @@
 
 ## The problem
 
-Nobody can check "Help the clerks with invoices". You cannot tell if the clerk did its job, or if it paid a load
-twice. A hire letter names three things: one outcome, one number you can query, and one thing it must never do.
-The must-never comes with a query that would catch it.
+"Help the clerks with invoices" cannot be checked. You cannot tell if the clerk did its job, or if it paid a load twice.
 
-For example, the freight clerk's must-never is "Pay the same load twice". Its `check` query lists every load with
-more than one payment. If both `INV-2012` and `INV-2017` get paid, the query returns load `L-1012`.
+A hire letter names three things:
 
-Chipotle's hiring assistant, Ava Cado, chats with candidates and books interviews. But offers go only to candidates
-a manager picks. Chipotle says the time from application to start fell by about two thirds. The outcome is a
-person starting. The must-never is an offer with no manager.
+1. One outcome.
+2. One number that you can query.
+3. One thing the employee must never do. The must-never comes with a query that would catch it.
+
+For example, the freight clerk's must-never is "Pay the same load twice". Its `check` query lists every load with more
+than one payment. If both `INV-2012` and `INV-2017` get paid, the query returns load `L-1012`.
+
+Chipotle's hiring assistant, Ava Cado, chats with candidates and books interviews. Offers go only to candidates that a
+manager picks. Chipotle says the time from application to start fell by about two thirds. The outcome is a person
+starting. The must-never is an offer with no manager.
 
 ```mermaid
 flowchart LR
-  O[outcome] --> M[metric: a query on the system of record]
-  N[must_never: one write tool] --> C[check: a query that finds it]
-  M --> L[employee.toml]
-  C --> L
+  Outcome[Outcome] --> Metric[Metric: a query on the ledger]
+  MustNever[Must-never: one write tool] --> Check[Check: a query that finds a breach]
+  Metric --> Letter[employee.toml]
+  Check --> Letter
 ```
 
 ## Your challenge
 
-Fill in `employee.toml` in this folder. Later steps read it, so keep it here. The `[hire]` block is the same as in
+Fill in `employee.toml` in this folder. Later steps read it, so keep it here. The `[hire]` block has the same fields as
 `reference/CONTRACT.md`:
 
 - `name` and `outcome`.
 - `starts_by`: a list of person, event, schedule or agent.
 - `lives`: one job, one case or always on.
 - `[hire.metric]` with `name` and `query`.
-- `[hire.must_never]` with `rule`, `write` (a tool name like `pay_invoice`) and `check` (a SELECT that returns the
-  bad rows).
+- `[hire.must_never]` with `rule`, `write` and `check`. The `write` is a tool name like `pay_invoice`. The `check` is a
+  SELECT that returns the bad rows.
 
 | Employee                    | Must never                                     |
 | --------------------------- | ---------------------------------------------- |
@@ -69,9 +73,9 @@ The freight sample is in [solution/employee.toml](../solution/employee.toml).
 
 ## Words you will use
 
-- **Outcome**: the result in the world the employee is hired for.
+- **Outcome**: the result in the world that the employee is hired for.
 - **Metric**: a number you get by running a query, not by asking someone.
 - **Must-never**: the one write the employee may never make, plus the query that would catch it.
 - **System of record**: the database that holds the truth, such as the ledger.
 
-Sources: [Chipotle newsroom](https://newsroom.chipotle.com/2025-02-19-CHIPOTLE-AIMS-TO-HIRE-FUTURE-BILLION-DOLLAR-BUSINESS-LEADERS-IN-NEW-BURRITO-SEASON-HIRING-PUSH).
+Source: [Chipotle newsroom](https://newsroom.chipotle.com/2025-02-19-CHIPOTLE-AIMS-TO-HIRE-FUTURE-BILLION-DOLLAR-BUSINESS-LEADERS-IN-NEW-BURRITO-SEASON-HIRING-PUSH).

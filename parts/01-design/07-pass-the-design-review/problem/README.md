@@ -2,9 +2,9 @@
 
 ## The problem
 
-You wrote every design file yourself, so you read each one the way you meant it. A peer reads only what is
-there. Six plain questions find most gaps. They find them before Build turns your files into code that moves
-money.
+You wrote every design file yourself. So you read each one the way you meant it. A peer reads only what is on the page.
+
+Six plain questions find most gaps. They find the gaps before Build turns your files into code that moves money.
 
 For example, a reviewer reads your `tools.yaml` and writes this line:
 
@@ -14,19 +14,19 @@ If `pay_invoice` named no approver, the answer would be no. Then you fix the fil
 
 ```mermaid
 flowchart LR
-  F[your design files] --> R1[peer one]
-  F --> R2[peer two]
-  R1 --> Q[six questions, yes or no]
-  R2 --> Q
-  Q -->|any no| X[fix the design, ask again]
-  Q -->|all yes| B[ready for Build]
+  Files[Your design files] --> Peer1[Peer one]
+  Files --> Peer2[Peer two]
+  Peer1 --> Questions[Six questions, yes or no]
+  Peer2 --> Questions
+  Questions -->|any no| Fix[Fix the design and ask again]
+  Questions -->|all yes| Build[Ready for Build]
 ```
 
 ## Your challenge
 
 Share your design files with two peers. Write their answers in `review.md` in this folder.
 
-In `review.md`, write one "## Reviewer: First Last" heading per person. Under each heading, write six lines:
+In `review.md`, write one heading with the reviewer's name for each person, such as "Reviewer: First Last". Under each heading, write six lines:
 
 - `- outcome checkable:` can a query tell whether the outcome happened?
 - `- must-never checkable:` does a query and a trap case catch the must-never?

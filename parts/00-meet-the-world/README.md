@@ -2,25 +2,20 @@
 
 ## The problem
 
-When an agent says "done", it makes a claim. At KaaS Freight, a wrong claim costs real money. You cannot take back
-an invoice paid twice, or paid above the agreed rate.
+When an agent says "done", it makes a claim. At KaaS Freight, a wrong claim costs real money. You cannot take back an
+invoice paid twice, or paid above the agreed rate.
 
 This part shows you three things. First, the world you work in. Second, an employee that believes its own reply.
 Third, the reference employee, which believes only the ledger.
 
-For example, the naive employee says `All 6 invoices paid. Done.` The ledger says something else: `4 paid once, 1
-paid twice, 1 not paid.` Only the ledger tells the truth.
+For example, the naive employee says `All 6 invoices paid. Done.` The ledger says something else. It shows 4 paid
+once, 1 paid twice, 1 not paid. Only the ledger tells the truth.
 
 ```mermaid
 flowchart LR
-  subgraph World["The world: localhost:7700"]
-    L[(Ledger)]
-    T[Tools: read_invoice, pay_invoice, ...]
-  end
-  E[An employee: naive or reference] -->|tool calls| T --> L
-  C[The checker] -->|reads| L
-  C -->|reads| TR[Traces]
-  E --> TR
+  Naive[Naive employee] -->|believes its own reply| Claim[All 6 paid. Done.]
+  Reference[Reference employee] -->|reads the ledger| Ledger[(Ledger)]
+  Ledger -->|4 paid once, 1 paid twice, 1 not paid| Truth[The truth]
 ```
 
 ## Walkthrough
@@ -39,14 +34,14 @@ In a second terminal, run the naive employee first. Then run the reference.
 bun run reference naive
 ```
 
-Expect: `Naive employee says: "All 6 invoices paid. Done."`, then `4 paid once, 1 paid twice, 1 not paid.`
+Expect: `Naive employee says: "All 6 invoices paid. Done."`, then 4 paid once, 1 paid twice, 1 not paid.
 
 ```bash
 bun run reference
 ```
 
-Expect: four `Done` lines, one `Needs you`, one `Refused`, and "Cost per invoice settled". The board is on `localhost:7702/board`.
-The reference keeps running so that you can look at the board. Press Ctrl+C when you are done.
+Expect: four `Done` lines, one `Needs you`, one `Refused`, and "Cost per invoice settled". The board is on
+`localhost:7702/board`. The reference keeps running so that you can look at the board. Press Ctrl+C when you are done.
 
 Fill in `notes.md`. Then check it.
 

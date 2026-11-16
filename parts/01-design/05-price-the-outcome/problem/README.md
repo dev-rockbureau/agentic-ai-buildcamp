@@ -3,40 +3,47 @@
 ## The problem
 
 A clerk that costs more per invoice than the person it helps loses money. So price one outcome, not one call.
-Count failed runs too, multiply out the calls and tokens, and compare the total with the value of one outcome.
 
-For example, Ravi spends about six minutes on a clean invoice, about USD 4 of his time. The freight clerk makes 6
-calls per run and 1.25 runs per invoice. On the `fast` role, that is $0.0045 per invoice.
+To price one outcome:
 
-The UK government runs about 500 consultations a year and spends about GBP 20 million on staff to read the
-replies. Its tool, Consult, was tested on over 2,000 replies to a Scottish Government consultation. The value is
-the staff cost it saves. The cost is the model calls.
+1. Count the failed runs too.
+2. Multiply out the calls and the tokens.
+3. Compare the total with the value of one outcome.
+
+For example, Ravi spends about six minutes on a clean invoice. That is about USD 4 of his time. The freight clerk makes
+6 calls per run and 1.25 runs per invoice. On the `fast` role, that is $0.0045 per invoice.
+
+The UK government spends about GBP 20 million a year on staff to read consultation replies. Its tool saves that staff
+cost. The cost is the model calls.
 
 ```mermaid
 flowchart LR
-  R[good + failed runs] --> C[calls per run] --> T[tokens per call] --> P[x dated price] --> O{below value?}
+  Runs[Good and failed runs] --> Calls[Calls per run]
+  Calls --> Tokens[Tokens per call]
+  Tokens --> Price[Price per million tokens]
+  Price --> Check{Below the value?}
 ```
 
 ## Your challenge
 
-Fill in `cost.yaml` here. It follows `cost.schema.json`. Replace each 0 and TODO:
+Fill in `cost.yaml` in this folder. It follows `cost.schema.json`. Replace each 0 and each TODO with your own value:
 
-- the employee and the one outcome;
-- what one outcome is worth, and why;
-- good and failed runs per outcome;
-- calls per run, and tokens per call;
-- the role, provider, date, source page and price per million tokens;
-- your cost per outcome.
+- The employee and the one outcome.
+- What one outcome is worth, and why.
+- Good and failed runs per outcome.
+- Calls per run, and tokens per call.
+- The role, provider, date, source page and price per million tokens.
+- Your cost per outcome.
 
-For the role, write `fast`, `smart` or `judge` from `config/models.ts`, never a model name. Copy the price from the
-provider's page. Then run the calculator: it prints every sum.
+For the role, write `fast`, `smart` or `judge` from `config/models.ts`. Never write a model name. Copy the price from
+the provider's page. Then run the calculator. It prints every sum.
 
 ```bash
 bun run cost parts/01-design/05-price-the-outcome/problem/cost.yaml
 ```
 
-Expect: the arithmetic line by line, ending `(matches within 1%)` and `(cost is ... of the value)`. For the freight
-clerk it looks like this:
+Expect: the arithmetic line by line, ending with `(matches within 1%)` and `(cost is ... of the value)`. For the
+freight clerk, it looks like this:
 
 ![bun run cost on the freight clerk](../images/expected.png)
 
@@ -58,7 +65,7 @@ clerk it looks like this:
 
 - The price has a date and an `https` source.
 - `failed_per_outcome` is above 0.
-- Your `cost_per_outcome_usd` matches the calculator within 1% and is below `value_per_outcome_usd`.
+- Your `cost_per_outcome_usd` matches the calculator within 1%. It must also be below `value_per_outcome_usd`.
 
 ```bash
 bun run verify price-the-outcome
@@ -76,7 +83,7 @@ Expect: `Done. All 6 rules pass.`
 
 ## Words you will use
 
-- **Cost per outcome**: model spend for one finished result, failed runs included.
+- **Cost per outcome**: model spend for one finished result. Failed runs are included.
 - **Value per outcome**: what one result is worth, such as the staff cost it saves.
 - **Role**: `fast`, `smart` or `judge` in `config/models.ts`. That file maps each role to a model.
 

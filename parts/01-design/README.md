@@ -1,24 +1,33 @@
 # Design
 
-KaaS Freight paid one carrier invoice twice: USD 3,140 for a single load. It took many emails to get the money
-back. Two clerks match the invoices of about 40 carriers by hand. When they fall behind, carriers charge late fees.
+## The problem
 
-This part comes before any agent code. You decide five things. What is the AI employee for? What must it never do?
-What may it touch? What does it cost? And who approves the design? Every answer is a file that a check can read.
+KaaS Freight paid one carrier invoice twice. That was USD 3,140 for one load. It took many emails to get the money back.
 
-For example, your hire letter names the must-never: "Pay the same load twice". It also names a SQL query that
-finds it in the ledger. Today `INV-2012` and `INV-2017` both bill load `L-1012`, for USD 2,675 each. If both are
-paid, that query returns load `L-1012`, and anyone can see the rule broke.
+Two clerks match the invoices of about 40 carriers by hand. When they fall behind, carriers charge late fees.
+
+This part comes before any agent code. You make five decisions:
+
+1. What is the AI employee for?
+2. What must it never do?
+3. What may it touch?
+4. What does it cost?
+5. Who approves the design?
+
+Each decision is a file. A check can read every file.
+
+For example, your hire letter names the must-never: "Pay the same load twice". It also names a SQL query that finds
+that mistake in the ledger. Today `INV-2012` and `INV-2017` both bill load `L-1012`, for USD 2,675 each. If both are
+paid, the query returns load `L-1012`. Anyone can see the rule broke.
 
 ```mermaid
 flowchart LR
-  T1[Starts by: a person, an event, a schedule or an agent] --> W
-  subgraph Map[Who decides the next step]
-    W[Workflow: code decides] --> A[Agent: the model decides]
-    A --> S[Agentic system: models hand work to models]
-  end
-  F[Freight audit clerk: Ravi hands it a new invoice] -.placed here.-> A
-  A --> G[Code still guards the must-never: no second payment for one load]
+  Start[What starts the work?] --> Choice{Who decides the next step?}
+  Choice -->|code| Workflow[Workflow]
+  Choice -->|the model| Agent[Agent]
+  Agent -->|work splits across employees| System[Agentic system]
+  Clerk[Freight clerk] -.->|placed here| Agent
+  Agent --> Guard[Code guards the must-never: no second payment for one load]
 ```
 
 The same picture is in `design-map.mmd`.
@@ -44,9 +53,10 @@ The same picture is in `design-map.mmd`.
 | [record-the-decisions](06-record-the-decisions/problem/README.md)             | three ADRs, each with the check that enforces it             | 30      |
 | [pass-the-design-review](07-pass-the-design-review/problem/README.md)         | `review.md`: two peers answer six questions                  | 30      |
 
-You work in each step's `problem/` folder. Pick the freight clerk, or one of the other employees on the menu. Keep
-the same employee for the whole part. From Build on, everyone builds the freight clerk, because it is the only
-employee with a world to run in.
+Work in each step's `problem/` folder. Pick the freight clerk, or one of the other employees on the menu. Keep the same
+employee for the whole part.
+
+From Build on, everyone builds the freight clerk. It is the only employee with a world to run in.
 
 ## Walkthrough
 
@@ -66,8 +76,8 @@ bun run verify write-the-hire-letter
 
 Expect: `Done. All 6 rules pass.`
 
-Write the acceptance cases in `03-turn-the-hire-into-tests/problem/acceptance.yaml`. The check reads your hire
-letter. There it finds the write that your must-never case forbids.
+Write the acceptance cases in `03-turn-the-hire-into-tests/problem/acceptance.yaml`. The check reads your hire letter.
+It finds the write that your must-never case forbids.
 
 ```bash
 bun run verify turn-the-hire-into-tests
@@ -92,8 +102,8 @@ bun run verify price-the-outcome
 
 Expect: the cost lines end with `(matches within 1%)`, then `Done. All 6 rules pass.`
 
-Write three ADRs in `06-record-the-decisions/problem/adr/`. An ADR, an architecture decision record, is a short note
-about one design choice and why you made it.
+Write three ADRs in `06-record-the-decisions/problem/adr/`. An ADR, or architecture decision record, is a short note.
+It names one design choice and says why you made it.
 
 ```bash
 bun run verify record-the-decisions
@@ -131,19 +141,22 @@ Part design is done: 7/7 steps pass.
 
 ## Finished
 
-You now have a design pack for one AI employee. It holds seven things:
+You now have a design pack for one AI employee. It has seven parts:
 
 - where the employee sits on the map;
-- a hire letter with a metric, and a must-never that a query can see;
+- a hire letter with a metric, and a must-never that a query can check;
 - acceptance cases that check rows in the system of record, not replies;
 - a tool list with the risk and the approver of each tool;
-- a dated cost per outcome that is below the value of that outcome;
+- a dated cost per outcome, below the value of that outcome;
 - three ADRs, and each one names its check;
 - a review signed by two peers.
 
-In Build, each file turns into running code. The hire letter becomes the contract the agent must keep. The
-acceptance cases become the tests the agent must pass. The tool list becomes the policy that guards every write, in
-`gate-writes-with-a-policy`. The must-never becomes `hold-the-must-never`.
+In Build, each file becomes running code:
 
-The ADRs become the checks they name. Those are `add-a-checker`, `catch-a-bad-draft`, `save-progress`,
-`pay-once-after-a-crash`, `run-the-swap-gate` and `refuse-a-bad-model`.
+- The hire letter becomes the contract the agent must keep.
+- The acceptance cases become the tests the agent must pass.
+- The tool list becomes the policy that guards every write, in `gate-writes-with-a-policy`.
+- The must-never becomes `hold-the-must-never`.
+
+The ADRs become the checks they name: `add-a-checker`, `catch-a-bad-draft`, `save-progress`, `pay-once-after-a-crash`,
+`run-the-swap-gate` and `refuse-a-bad-model`.
