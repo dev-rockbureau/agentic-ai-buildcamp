@@ -18,8 +18,7 @@ In this part, you answer both questions:
 5. You practise the night the ledger goes down.
 6. You finish with a five-minute demo.
 
-For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints one line.
-The line reads:
+For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints this line first:
 
 > "The replay set: 60 runs of the
 > clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)."
