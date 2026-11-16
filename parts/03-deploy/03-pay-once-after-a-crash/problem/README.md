@@ -13,7 +13,9 @@ Saved progress alone does not fix this. The crash came after the write but befor
 answers with the first result, and it writes nothing new.
 
 For example, INV-2014 is a clean invoice for USD 3,885. Your employee sends `pay_invoice` with the key
-`kaas-freight:INV-2014:pay`. The payment is written, and then the process is killed. After the restart, the employee sends
+`kaas-freight:INV-2014:pay`. The payment is written, and then the process is killed.
+
+After the restart, the employee sends
 the same key again. The world returns the first payment. `read_invoice` shows one payment, so the job is `done`.
 
 ```mermaid

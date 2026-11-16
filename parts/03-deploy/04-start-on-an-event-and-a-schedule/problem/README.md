@@ -3,7 +3,9 @@
 ## The problem
 
 Ravi does not want to type a job for every invoice. Some carriers upload invoices to a portal. The portal sends a webhook.
-A webhook is an HTTP call that another system makes to you when something happens. Other carriers email their invoices.
+A webhook is an HTTP call that another system makes to you when something happens.
+
+Other carriers email their invoices.
 Those land in a mailbox, and a timer reads it.
 
 That gives two new ways to start a job. It also gives two new ways to pay twice:

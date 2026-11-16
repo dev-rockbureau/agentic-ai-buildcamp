@@ -12,7 +12,9 @@ A cap is code that does three things:
 3. It lets only the finance lead raise the budget.
 
 For example, the reference sets `max_usd_per_job = 0.05` and `max_usd_per_day = 5` in `employee.toml`. The checker lowers the
-job budget to $0.00001. That is less than one model call costs. Now a clean invoice is not paid. Its job waits in Needs you,
+job budget to $0.00001. That is less than one model call costs.
+
+Now a clean invoice is not paid. Its job waits in Needs you,
 with a `raise_budget` approval. Ravi and Jo get `403`. When Lena approves, the invoice is paid once.
 
 ```mermaid

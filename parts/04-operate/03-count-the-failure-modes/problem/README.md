@@ -2,8 +2,9 @@
 
 ## The problem
 
-Eight runs failed out of 60. That is a number, not a plan. Finance asks, "Which model should we use?" The engineers ask,
-"What do we fix first?" Both need the same thing: the failures grouped by what went wrong, with a count for each group.
+Eight runs failed out of 60. That is a number, not a plan. Finance asks which model to use. The engineers ask what to fix first.
+
+Both need the same thing: the failures grouped by what went wrong, with a count for each group.
 The biggest group is often not the model at all.
 
 ```mermaid

@@ -18,8 +18,13 @@ In this part, you answer both questions:
 5. You practise the night the ledger goes down.
 6. You finish with a five-minute demo.
 
-For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints: "The replay set: 60 runs of the
-clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)." The 5 failed runs still cost money, so the board counts them too.
+For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints one line.
+The line reads:
+
+> "The replay set: 60 runs of the
+> clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)."
+
+The 5 failed runs still cost money, so the board counts them too.
 
 Why a gate, and not a quick try? The machine you test on changes the score. Anthropic saw a 6 point swing on one agent
 benchmark, from the machine setup alone. So a gate keeps everything the same except the model. It runs three times, and every

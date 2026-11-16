@@ -19,7 +19,9 @@ flowchart LR
 ## Your challenge
 
 In `evals/` in this folder, write one file for each mode in your `failure-modes.md`. The check reads those files from
-`count-the-failure-modes`. Name each eval exactly like its mode. For example, `evals/missed-the-duplicate.ts`. Start from
+`count-the-failure-modes`. Name each eval exactly like its mode. For example, `evals/missed-the-duplicate.ts`.
+
+Start from
 `evals/_example.ts`. It shows the shape, and what a run holds.
 
 An eval is a small function. It returns `null` when the run passes. It returns one sentence on why the run fails. It reads

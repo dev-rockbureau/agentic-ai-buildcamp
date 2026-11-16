@@ -31,7 +31,9 @@ Split the maker from the checker. The maker drafts the decision. The checker acc
 4. Only an accepted draft reaches the write. Every write gets an `execute_tool` span with `"x.side_effect": "write"`.
 
 For example, INV-2028 bills 3 hours of detention, USD 225. Detention is extra pay for a truck that had to wait. But the
-proof of delivery for load L-1027 has no signed delay. The maker drafts a dispute: `DETENTION_UNSIGNED`, USD 225. The
+proof of delivery for load L-1027 has no signed delay.
+
+The maker drafts a dispute: `DETENTION_UNSIGNED`, USD 225. The
 checker compares the draft with the rate and the proof of delivery, and accepts it. Only then does the employee call
 `open_dispute`.
 

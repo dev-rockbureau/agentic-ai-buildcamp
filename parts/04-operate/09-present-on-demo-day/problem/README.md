@@ -14,7 +14,9 @@ other than the agent checked the work. They must see five things:
 If the demo is only the agent saying "done", it proves nothing.
 
 For example, the sample demo shows the naive agent first. It said "All 6 invoices paid. Done." But the ledger showed one
-invoice paid twice, and one not paid at all. Then it shows your employee on the same six invoices. Four are settled. One waits
+invoice paid twice, and one not paid at all.
+
+Then it shows your employee on the same six invoices. Four are settled. One waits
 for Lena at USD 6,200. The white-text invoice is refused.
 
 ```mermaid

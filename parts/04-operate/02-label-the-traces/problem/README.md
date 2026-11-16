@@ -9,6 +9,7 @@ The **replay set** is the clerk in production. It is one nightly batch of 60 inv
 spans it wrote and the ledger rows it left.
 
 The employee's status is only a claim. `stopped` can be the right answer. For example, it may refuse an order hidden in a scan.
+
 `waiting_for_human` can be right too. An invoice for USD 6,200 must wait for Lena. Only the ledger, compared with the evidence,
 says pass or fail.
 

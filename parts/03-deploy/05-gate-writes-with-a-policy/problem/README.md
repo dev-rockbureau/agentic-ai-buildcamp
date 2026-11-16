@@ -15,7 +15,9 @@ So put the rules in one file that a finance lead can read. Then add a gate in co
 write. A gate is the code between a draft and a write. It allows the write, holds it for a person, or refuses it.
 
 For example, the reference `policy.yaml` says `pay_usd_without_approval: 5000`. INV-2045 is for USD 6,200. So the gate says
-`needs_approval`, and the job waits for Lena. Change the limit to 7000 in the file. Now the same invoice pays at once. The
+`needs_approval`, and the job waits for Lena.
+
+Change the limit to 7000 in the file. Now the same invoice pays at once. The
 prompt and the code do not change.
 
 ```mermaid

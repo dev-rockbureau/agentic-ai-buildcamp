@@ -9,9 +9,12 @@ Most teams do not write it by hand. They use a graph library, with a database be
 
 LangGraph is that library. A **graph** is a list of steps, called nodes, joined by arrows. Your graph has two nodes: `decide`
 and `pay`. When the amount is over Lena's limit, `pay` calls `interrupt()`. That pauses the graph, and saves it in Postgres.
+
 Later, a new process can carry on from the pause.
 
-For example, run `7850` through the graph. `decide` runs. Then `pay` stops and waits for Lena. You kill the process. You start a
+For example, run `7850` through the graph. `decide` runs. Then `pay` stops and waits for Lena. You kill the process.
+
+You start a
 new one, and answer "approved". The new process starts at `pay`, not at `decide`. The ledger gets one payment row.
 
 ```mermaid

@@ -2,8 +2,12 @@
 
 ## The problem
 
-The naive clerk says "All 6 invoices paid. Done." Then you open the ledger. Four invoices are paid once. One is paid
-twice. One is not paid at all. The clerk did not lie on purpose. It trusted its own calls, and it never looked at the
+The naive clerk says "All 6 invoices paid. Done." Then you open the ledger.
+
+Four invoices are paid once. One is paid
+twice. One is not paid at all.
+
+The clerk did not lie on purpose. It trusted its own calls, and it never looked at the
 ledger, the system of record.
 
 In this part you build your own AI employee. You can use any language or framework. Each step is done only when three
@@ -31,7 +35,9 @@ it passes 3 trials in a row only about 42% of the time. So every check here runs
 
 Approvals need the same care. In one Anthropic trial, expert analysts chose the option their agent leaned towards 86% of
 the time ([How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls)). So a
-click on "approve" is not enough. Your employee must check that the right person decided, inside their limit. For
+click on "approve" is not enough. Your employee must check that the right person decided, inside their limit.
+
+For
 example, INV-2045 is for USD 6,200. Ravi may approve up to USD 5,000, so only Lena can approve it.
 
 ## The loop you build
@@ -53,7 +59,9 @@ flowchart LR
 ```
 
 Read the diagram from left to right. A job comes in. Your employee reads the evidence. A maker drafts a decision, and a
-checker tests it. A payment over a limit waits for a person. Every write happens once. Then the employee reads the ledger
+checker tests it.
+
+A payment over a limit waits for a person. Every write happens once. Then the employee reads the ledger
 to see whether the write landed.
 
 ## Steps
