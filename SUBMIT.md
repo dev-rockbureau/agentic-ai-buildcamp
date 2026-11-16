@@ -17,7 +17,7 @@ Your facilitator clones your fork and runs one command per part. For example, fo
 bun run verify part build
 ```
 
-Expect: one line per step, and at the end `Part build is done: 11/11 steps pass.` when every step passes.
+Expect: one line per step, and at the end `Part build is done: 13/13 steps pass.` when every step passes.
 
 A part is done when its command says every step passes. Each part's README ends with an "Assignment" section. It
 lists a few more yes-or-no questions. Some are answered by a script, and some by a peer who reads your files or
@@ -29,7 +29,7 @@ To grade a whole cohort, the facilitator runs one more command in each fork:
 bun run verify --report
 ```
 
-Expect: `Wrote verify-report.json: <passing> of 37 steps pass.` It checks every step, so it can take some minutes.
+Expect: `Wrote verify-report.json: <passing> of 43 steps pass.` It checks every step, so it can take some minutes.
 
 ## Each part
 
@@ -48,7 +48,7 @@ Part build:
   PASS   answer-the-contract  (1/1 rules)
   PASS   call-the-tools  (2/2 rules)
   ...
-Part build is done: 11/11 steps pass.
+Part build is done: 13/13 steps pass.
 ```
 
 ## Before you hand in
