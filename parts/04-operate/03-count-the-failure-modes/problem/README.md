@@ -2,29 +2,29 @@
 
 ## The problem
 
-Eight runs failing out of 60 is a number, not a plan. Finance asks "which model should we use?" The engineers ask
-"what do we fix first?" Both need the same thing: the failures grouped by what went wrong, with a count. The
-biggest group is often not the model at all.
+Eight runs failed out of 60. That is a number, not a plan. Finance asks, "Which model should we use?" The engineers ask,
+"What do we fix first?" Both need the same thing: the failures grouped by what went wrong, with a count for each group.
+The biggest group is often not the model at all.
 
 ```mermaid
 flowchart LR
-  L[labels.csv: runs labelled fail] --> G{What went wrong first?}
-  G --> A[Mode A: 5 runs]
-  G --> B[Mode B: 2 runs]
-  G --> C[Mode C: 1 run]
-  A --> F[Fix the largest first]
+  Labels["labels.csv: runs labelled fail"] --> Group{What went wrong first?}
+  Group --> A[Mode A: 5 runs]
+  Group --> B[Mode B: 2 runs]
+  Group --> C[Mode C: 1 run]
+  A --> Fix[Fix the largest first]
 ```
 
 ## Your challenge
 
-Fill the table in `failure-modes.md` in this folder. Use the runs you labelled `fail` in `label-the-traces`. The
-check reads `labels.csv` from that step's folder.
+Fill the table in `failure-modes.md` in this folder. Use the runs that you labelled `fail` in `label-the-traces`. The check reads
+`labels.csv` from that step's folder.
 
-1. Read each failed run's reason and spans in the trace viewer again
-   (`bun parts/04-operate/operate.ts traces`).
-2. Ask: what went wrong first? A draft the checker rejected, a tool call that failed, an approval that never came?
-3. Give each group a verb-thing name that says what to fix, such as `missed-the-duplicate`, never `agent-errors`.
-4. One row per mode: its count, its run ids and one line on what happened. Largest first.
+1. Read each failed run's reason and spans in the trace viewer again. Run `bun parts/04-operate/operate.ts traces`.
+2. Ask: what went wrong first? Was it a draft the checker rejected, a tool call that failed, or an approval that never came?
+3. Give each group a verb-thing name that says what to fix, such as `missed-the-duplicate`. Never use a vague name like
+   `agent-errors`.
+4. Write one row per mode: its count, its run IDs, and one line on what happened. Put the largest first.
 
 For example, one row for run `run-c2d6049d` from the last step looks like this:
 
@@ -32,14 +32,14 @@ For example, one row for run `run-c2d6049d` from the last step looks like this:
 | missed-the-duplicate | 1 | run-c2d6049d | The draft said pay on a load already billed. The checker stopped it. |
 ```
 
-Keep runs that ended in different ways apart. A job that `failed` on a ledger error needs a different fix from a
-job the checker `stopped` on a wrong draft. In the next step they also need different evals.
+Keep runs that ended in different ways apart. A job that `failed` on a ledger error needs a different fix from a job that the
+checker `stopped` on a wrong draft. In the next step, they also need different evals.
 
 ## Done when
 
-- The table has at least two modes, each named verb-thing, each count equal to the run ids it lists.
-- The counts add up to the runs you labelled fail, and each failed run is in exactly one mode.
-- No mode mixes runs that `failed` with runs that were `stopped`, and the rows are largest first.
+- The table has at least two modes. Each has a verb-thing name, and each count equals the run IDs it lists.
+- The counts add up to the runs you labelled `fail`. Each failed run is in exactly one mode.
+- No mode mixes runs that `failed` with runs that were `stopped`. The rows are largest first.
 
 ```bash
 bun run verify count-the-failure-modes
@@ -58,6 +58,6 @@ Expect: `Done. All 5 rules pass.`
 
 ## Words you will use
 
-- **Failure mode**: one way the employee fails, named so a person knows what to fix.
-- **Open coding, then grouping**: first notes per run in your own words (you did that in `labels.csv`), then
-  groups of notes that share a cause. The error-discovery method in the reading list describes both.
+- **Failure mode**: one way the employee fails, named so that a person knows what to fix.
+- **Open coding, then grouping**: first, short notes for each run in your own words. You did that in `labels.csv`. Then you
+  group the notes that share a cause.

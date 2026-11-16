@@ -2,35 +2,36 @@
 
 ## The problem
 
-You built the clerk's pause and its saved progress by hand. That is the right way to learn them. But on a real
-team, nobody keeps a progress file by hand for long. They use a library that does it, and a database behind it.
+You built the clerk's pause and its saved progress by hand. That is the right way to learn them.
+
+But on a real team, nobody keeps a progress file by hand for long. They use a library that does it, and a database behind it.
 You need to know what that library does for you, and what it still leaves to you.
 
-For example, your Deploy employee saves each job in `STATE_DIR` and sends a stable Idempotency-Key. A graph
-library saves the same facts as checkpoints in Postgres. Your approval rule stays yours. Only the plumbing moves.
+For example, your Deploy employee saves each job in `STATE_DIR`, and it sends a stable Idempotency-Key. A graph library saves the
+same facts as checkpoints in Postgres. Your approval rule stays yours. Only the plumbing moves.
 
 ## Why it matters
 
-A pause that lives in a file on one machine is lost when the machine is. A pause in Postgres is not. Any new
-process can find it by name and carry on. So teams run agents on a graph library with a database checkpointer.
-This part redoes one thing you built by hand with it.
+A pause that lives in a file on one machine is lost when that machine is lost. A pause in Postgres is not lost. Any new process
+can find it by name, and carry on. So teams run agents on a graph library with a database checkpointer. This part redoes one
+thing you built by hand, using that library.
 
 ## What we teach
 
-- Graph, node, interrupt and checkpoint, shown on the approval pause you already know.
-- Resume on the same `thread_id`: the second process starts at `pay`, not at `decide`.
+- Graph, node, interrupt and checkpoint. You see them on the approval pause you already know.
+- Resume on the same `thread_id`. The second process starts at `pay`, not at `decide`.
 - Why a node that can run twice must write once. The pause makes `pay` start again from its top.
 
 ```mermaid
 flowchart LR
-  A[start run, amount over the limit] --> D[node decide]
-  D --> P{node pay: over Lena's limit?}
-  P -->|no| W[(payments: one row)]
-  P -->|yes| I[interrupt: checkpoint saved in Postgres]
-  I -.process killed.-> R[new process, same thread_id]
-  R --> Y[answer: approved]
-  Y --> P2[node pay runs again] --> W
-  C[assignment/check.ts] -.kills, restarts, counts rows.-> I
+  Start[Start run, amount over the limit] --> Decide[Node decide]
+  Decide --> Pay{Node pay: over Lena's limit?}
+  Pay -->|no| Row[(payments: one row)]
+  Pay -->|yes| Pause[Interrupt: checkpoint saved in Postgres]
+  Pause -.process killed.-> Restart[New process, same thread_id]
+  Restart --> Answer[Answer: approved]
+  Answer --> Again[Node pay runs again] --> Row
+  Check[assignment/check.ts] -.kills, restarts, counts rows.-> Pause
 ```
 
 ## Steps

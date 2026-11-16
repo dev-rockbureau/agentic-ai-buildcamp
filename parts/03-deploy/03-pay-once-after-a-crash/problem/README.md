@@ -2,19 +2,19 @@
 
 ## The problem
 
-The pay tool writes the payment. Then the process dies before the answer comes back. On restart, the employee sees
-a job that is still `working` with no result saved, so it pays again. KaaS Freight paid one invoice twice last
-month. It took a long time to get the money back. A crash at the worst moment is not rare. Sooner or later, it
-happens.
+The pay tool writes the payment. Then the process dies before the answer comes back. On restart, the employee sees a job
+that is still `working`, with no result saved. So it pays again.
+
+KaaS Freight paid one invoice twice last month. It took a long time to get the money back. A crash at the worst moment is
+not rare. Sooner or later, it happens.
 
 Saved progress alone does not fix this. The crash came after the write but before the save. The fix is an
-Idempotency-Key that stays the same on every try, before and after a restart. When the second call comes, the
-ledger answers with the first result and writes nothing new.
+`Idempotency-Key` that stays the same on every try, before and after a restart. When the second call comes, the ledger
+answers with the first result, and it writes nothing new.
 
 For example, INV-2014 is a clean invoice for USD 3,885. Your employee sends `pay_invoice` with the key
-`kaas-freight:INV-2014:pay`. The payment is written, and then the process is killed. After the restart, the
-employee sends the same key again. The world returns the first payment. `read_invoice` shows one payment, so the
-job is `done`.
+`kaas-freight:INV-2014:pay`. The payment is written, and then the process is killed. After the restart, the employee sends
+the same key again. The world returns the first payment. `read_invoice` shows one payment, so the job is `done`.
 
 ```mermaid
 sequenceDiagram
@@ -26,18 +26,18 @@ sequenceDiagram
   E->>E: restart, resume the working job
   E->>W: pay_invoice, same key
   W-->>E: the first result, nothing new written
-  E->>W: read_invoice: one payment. Done
+  E->>W: read_invoice: one payment, done
 ```
 
 ## Your challenge
 
-1. Build the key from things that do not change: the tenant, the invoice and the action. Never use a random id or
-   a timestamp.
-2. Send it on every try, and again after a restart.
+1. Build the key from things that do not change: the tenant, the invoice and the action. Never use a random ID or a
+   timestamp.
+2. Send the key on every try, and again after a restart.
 3. After any write you are not sure about, read the ledger before you report. The ledger decides.
 
-The checker makes the world hang after the first `pay_invoice` writes. It kills your employee with SIGKILL, starts
-it again, and reads the ledger. Your employee must use `mode = "http"` for this step.
+The checker makes the world hang after the first `pay_invoice` writes. It kills your employee with SIGKILL, starts it
+again, and reads the ledger. Your employee must use `mode = "http"` for this step.
 
 ## Done when
 
@@ -54,11 +54,11 @@ Expect: `Done. All 1 rules pass.`
 
 ## If you get stuck
 
-| What you see                                  | Fix                                                                   |
-| --------------------------------------------- | --------------------------------------------------------------------- |
-| "does not know job"                           | Save progress first: pass `save-progress`                             |
-| "the ledger shows 2 payments after the crash" | Your key changes between tries. Print it before each call and compare |
-| `is "working"` after the restart              | On start, carry on with every job whose saved status is `working`     |
+| What you see                                  | Fix                                                                    |
+| --------------------------------------------- | ---------------------------------------------------------------------- |
+| "does not know job"                           | Save progress first. Pass `save-progress`.                             |
+| "the ledger shows 2 payments after the crash" | Your key changes between tries. Print it before each call and compare. |
+| `is "working"` after the restart              | On start, carry on with every job whose saved status is `working`.     |
 
 ## Words you will use
 

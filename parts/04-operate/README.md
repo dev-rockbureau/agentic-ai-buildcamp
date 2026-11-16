@@ -1,39 +1,43 @@
 # Operate
 
-The clerk works. Now finance asks two questions. What does one settled invoice cost? And is a model about twenty
-times cheaper per call safe to use? Nobody can answer, because nobody has read what the clerk does in production.
+## The problem
 
-In this part you answer both questions:
+The clerk works. Now finance asks two questions:
 
-1. You put cost per outcome on the board. An **outcome** is one invoice the clerk finished, paid or not.
-2. You read 60 real runs and label each one pass or fail.
-3. You group the fails into kinds, and turn each kind into an **eval**: a small check that runs on every trace.
+1. What does one settled invoice cost?
+2. Is a model that is about twenty times cheaper per call safe to use?
+
+Nobody can answer yet, because nobody has read what the clerk does in production.
+
+In this part, you answer both questions:
+
+1. You put cost per outcome on the board. An **outcome** is one invoice that the clerk finished, paid or not.
+2. You read 60 real runs, and label each one pass or fail.
+3. You group the fails into kinds. You turn each kind into an **eval**, a small check that runs on every trace.
 4. You build a **gate**. It refuses a cheaper model that would leave a duplicate invoice open.
 5. You practise the night the ledger goes down.
-6. You end with a five-minute demo.
+6. You finish with a five-minute demo.
 
-For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints:
-`The replay set: 60 runs of the clerk in production (49 done, 2 waiting, 4 stopped, 5 failed).` The 5 failed
-runs still cost money, so the board counts them too.
+For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints: "The replay set: 60 runs of the
+clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)." The 5 failed runs still cost money, so the board counts them too.
 
-Why a gate and not a quick try? The machine you test on changes the score. Anthropic saw a 6 point swing on one
-agent benchmark from the machine setup alone. They say not to trust any gap under 3 points until the setup is the
-same ([Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise),
-read 2026-11-12). So a gate keeps everything the same except the model. It runs three times, and every trial must
-pass.
+Why a gate, and not a quick try? The machine you test on changes the score. Anthropic saw a 6 point swing on one agent
+benchmark, from the machine setup alone. So a gate keeps everything the same except the model. It runs three times, and every
+trial must pass
+([Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise), read 2026-11-12).
 
 ```mermaid
 flowchart LR
-  B[Board: cost per outcome] --> T[Traces of the replay set]
-  T --> L[Labels: pass or fail]
-  L --> M[Failure modes with counts]
-  M --> E[One eval per mode]
-  E --> G{Swap gate: current vs candidate}
-  G -->|refuse| X[Keep the current model]
-  G -->|allow| S[Swap, cost per outcome falls]
-  S --> B
-  X --> B
-  D[Incident drill: the ledger is down] --> R[Runbook] --> E
+  Board[Board: cost per outcome] --> Traces[Traces of the replay set]
+  Traces --> Labels[Labels: pass or fail]
+  Labels --> Modes[Failure modes with counts]
+  Modes --> Evals[One eval per mode]
+  Evals --> Gate{Swap gate: current vs candidate}
+  Gate -->|refuse| Keep[Keep the current model]
+  Gate -->|allow| Swap[Swap, cost per outcome falls]
+  Swap --> Board
+  Keep --> Board
+  Drill[Incident drill: the ledger is down] --> Runbook[Runbook] --> Evals
 ```
 
 The same picture is in `operate-loop.mmd`.
