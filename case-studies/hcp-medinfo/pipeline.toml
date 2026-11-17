@@ -1,0 +1,8 @@
+# How the check runs a solution. The check fills in {question_id}.
+# The TypeScript solution arrives in step 8 of the build plan; until then only "python" works.
+solution = "python"
+
+[python]
+# Commands run in this folder, relative to case-studies/hcp-medinfo/.
+directory = "solution/python"
+search = ["uv", "run", "--quiet", "python", "-m", "medinfo", "search", "{question_id}"]

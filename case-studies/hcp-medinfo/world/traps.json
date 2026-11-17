@@ -98,6 +98,7 @@
       "queue": "light_check",
       "outcome": "refused_source_changed",
       "change_after_signing": "SRD-ZEN-FOOD@1",
+      "must_cite": ["SRD-ZEN-FOOD@1"],
       "safety_packet": false
     },
     "Q-015": {

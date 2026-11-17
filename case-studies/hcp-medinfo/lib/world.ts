@@ -62,6 +62,18 @@ function readJson<Shape>(fileName: string): Shape {
   return JSON.parse(readFileSync(join(WORLD_DIR, fileName), "utf8")) as Shape;
 }
 
+export function readPolicy(): Record<string, unknown> {
+  const text = readFileSync(join(CASE_STUDY_DIR, "policy.yaml"), "utf8");
+  return Bun.YAML.parse(text) as Record<string, unknown>;
+}
+
+// The world's "today" as YYYY-MM-DD. It stays fixed so the traps keep working; HCP_TODAY overrides.
+export function worldClock(): string {
+  const clock = readPolicy().clock;
+  const written = clock instanceof Date ? clock.toISOString() : String(clock);
+  return (process.env.HCP_TODAY ?? written).slice(0, 10);
+}
+
 export function sha256(text: string): string {
   return createHash("sha256").update(text).digest("hex");
 }

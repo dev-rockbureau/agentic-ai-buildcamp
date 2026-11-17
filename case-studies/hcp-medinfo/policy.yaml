@@ -3,6 +3,10 @@
 
 countries: [DE, FR, US]
 
+# The world's "today". Document dates are checked against it, so the traps keep working as real
+# time passes. HCP_TODAY overrides it.
+clock: 2026-11-16
+
 topics:
   escalate_with_draft: [safety, off_label, special_population, competitor_comparison]
   human_only: [legal, complaint]
@@ -22,8 +26,11 @@ approved_use:
   doctor: [prescribing_information, srd]
   rep: [prescribing_information]
 
+# Passages scoring below min_score are dropped. When none is left, the question needs a writer.
+# 0.35 sits between the best match for a question with no approved answer (Q-007, about 0.29)
+# and the weakest best match for a question that has one (about 0.44).
 retrieval:
-  min_score: 0.2
+  min_score: 0.35
   top_k: 6
 
 # due_minutes is calendar minutes from when the item is queued. It is NOT business time:

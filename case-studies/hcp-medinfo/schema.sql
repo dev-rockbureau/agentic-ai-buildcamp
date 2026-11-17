@@ -98,7 +98,10 @@ create table knowledge.chunks (
   start_char integer not null,
   end_char integer not null,
   text text not null,
-  tsv tsvector generated always as (to_tsvector('english', section || ' ' || text)) stored,
+  -- The heading weighs more than the body, so "Storage" ranks a storage section above a passing word.
+  tsv tsvector generated always as (
+    setweight(to_tsvector('english', section), 'A') || setweight(to_tsvector('english', text), 'B')
+  ) stored,
   foreign key (doc_id, version) references knowledge.documents (doc_id, version)
 );
 

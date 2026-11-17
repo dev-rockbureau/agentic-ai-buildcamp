@@ -13,6 +13,7 @@ import {
   readQuestions,
   readReviewers,
   sectionsOf,
+  worldClock,
 } from "./world";
 
 const INSERT_PERSON = `insert into shared.doctors
@@ -80,7 +81,7 @@ async function loadDocument(client: DatabaseClient, document: ApprovedDocument):
 
 async function loadDocuments(client: DatabaseClient): Promise<{ total: number; traps: number }> {
   const documents = readDocuments();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = worldClock();
   for (const document of documents) await loadDocument(client, document);
   const traps = documents.filter((document) => isTrapDocument(document, today)).length;
   return { total: documents.length, traps };
