@@ -1,0 +1,38 @@
+# The pipeline's rules, in one place. The graph, the safety scan and the gateway read this file.
+# Nothing here is hard-coded in the solutions.
+
+countries: [DE, FR, US]
+
+topics:
+  escalate_with_draft: [safety, off_label, special_population, competitor_comparison]
+  human_only: [legal, complaint]
+  # Keyword rules run before the model's topic check. The two results are joined.
+  rules:
+    safety: [rash, swelling, hospital, side effect, reaction, overdose]
+    off_label: [children, pediatric, not approved for, unapproved]
+    special_population: [pregnan, breastfeed, renal, kidney, hepatic, elderly]
+    legal: [lawyer, lawsuit, sue]
+
+# The safety scan's whole vocabulary. Anything not on this list is missed (trap T16).
+# A keyword list like this is not suitable for real safety intake.
+safety_terms: [rash, swelling, hospital, reaction, overdose, died, pregnan, "didn't work"]
+
+# Which kinds of approved document each kind of requester may be answered from.
+approved_use:
+  doctor: [prescribing_information, srd]
+  rep: [prescribing_information]
+
+retrieval:
+  min_score: 0.2
+  top_k: 6
+
+# due_minutes is calendar minutes from when the item is queued. It is NOT business time:
+# no staffed hours, weekends, holidays or regional handoffs.
+queues:
+  light_check: { role: specialist, due_minutes: 30 }
+  full_review: { role: senior_reviewer, due_minutes: 480 }
+  writer_needed: { role: writer, due_minutes: 1440 }
+  human_only: { role: senior_reviewer, due_minutes: null }
+  identity_resolution: { role: data_steward, due_minutes: 1440 }
+
+send_back_limit: 2

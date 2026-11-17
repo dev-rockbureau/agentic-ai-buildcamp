@@ -1,0 +1,17 @@
+# One Postgres for the HCP medical information pipeline. `bun run hcp seed` creates the schemas,
+# the roles and the data, so the database starts empty here.
+# "trust" is fine here: the port is on your own machine and the data is thrown away by `down -v`.
+# Port 54330 keeps it apart from part 05's database on 54329, so both can run at once.
+services:
+  db:
+    image: pgvector/pgvector:0.8.7-pg18-trixie
+    environment:
+      POSTGRES_DB: medinfo
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "127.0.0.1:54330:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d medinfo"]
+      interval: 1s
+      timeout: 3s
+      retries: 30

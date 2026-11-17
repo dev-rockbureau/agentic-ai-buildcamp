@@ -1,0 +1,146 @@
+[
+  {
+    "id": "D-US-01",
+    "name": "Dr. Maya Chen",
+    "email": "maya.chen@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-02",
+    "name": "Dr. Samuel Okafor",
+    "email": "samuel.okafor@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-03",
+    "name": "Dr. Priya Raman",
+    "email": "priya.raman@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-04",
+    "name": "Dr. Lucas Ferreira",
+    "email": "lucas.ferreira@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-05",
+    "name": "Dr. Hannah Weiss",
+    "email": "hannah.weiss@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-06",
+    "name": "Dr. Omar Haddad",
+    "email": "omar.haddad@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-07",
+    "name": "Dr. Grace Liu",
+    "email": "grace.liu@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-08",
+    "name": "Dr. Ben Adler",
+    "email": "ben.adler@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-US-09",
+    "name": "Dr. Ruth Alvarez",
+    "email": "ruth.alvarez@clinic.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-DE-01",
+    "name": "Dr. Jonas Becker",
+    "email": "jonas.becker@praxis.example",
+    "country": "DE",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-DE-02",
+    "name": "Dr. Mia Vogel",
+    "email": "mia.vogel@praxis.example",
+    "country": "DE",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-FR-01",
+    "name": "Dr. Camille Laurent",
+    "email": "camille.laurent@cabinet.example",
+    "country": "FR",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-FR-02",
+    "name": "Dr. Antoine Moreau",
+    "email": "antoine.moreau@cabinet.example",
+    "country": "FR",
+    "language": "en",
+    "verified": true,
+    "kind": "doctor"
+  },
+  {
+    "id": "D-XX-01",
+    "name": "Alex Morgan",
+    "email": "alex.morgan@mail.example",
+    "country": null,
+    "language": "en",
+    "verified": false,
+    "kind": "doctor"
+  },
+  {
+    "id": "REP-US-01",
+    "name": "Jordan Blake",
+    "email": "jordan.blake@company.example",
+    "country": "US",
+    "language": "en",
+    "verified": true,
+    "kind": "rep"
+  },
+  {
+    "id": "REP-DE-01",
+    "name": "Felix Wagner",
+    "email": "felix.wagner@company.example",
+    "country": "DE",
+    "language": "en",
+    "verified": true,
+    "kind": "rep"
+  }
+]

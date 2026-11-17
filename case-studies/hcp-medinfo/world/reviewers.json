@@ -1,0 +1,58 @@
+[
+  {
+    "id": "R-US-1",
+    "name": "Nadia Brooks",
+    "role": "specialist",
+    "countries": ["US"],
+    "pin": "1357"
+  },
+  {
+    "id": "R-US-2",
+    "name": "Dr. Victor Hale",
+    "role": "senior_reviewer",
+    "countries": ["US"],
+    "pin": "2468"
+  },
+  {
+    "id": "R-DE-1",
+    "name": "Katrin Hoffmann",
+    "role": "specialist",
+    "countries": ["DE"],
+    "pin": "3579"
+  },
+  {
+    "id": "R-DE-2",
+    "name": "Dr. Stefan Krause",
+    "role": "senior_reviewer",
+    "countries": ["DE"],
+    "pin": "4680"
+  },
+  {
+    "id": "R-FR-1",
+    "name": "Julie Martin",
+    "role": "specialist",
+    "countries": ["FR"],
+    "pin": "5791"
+  },
+  {
+    "id": "R-FR-2",
+    "name": "Dr. Hugo Bernard",
+    "role": "senior_reviewer",
+    "countries": ["FR"],
+    "pin": "6802"
+  },
+  {
+    "id": "W-1",
+    "name": "Elena Novak",
+    "role": "writer",
+    "countries": ["US", "DE", "FR"],
+    "pin": "7913"
+  },
+  {
+    "id": "DS-1",
+    "name": "Marcus Reid",
+    "role": "data_steward",
+    "countries": [],
+    "pin": "8024"
+  }
+]

@@ -20,7 +20,8 @@
     "text-audit": "bun scripts/text-audit.ts",
     "check:changed": "bun scripts/changed.ts",
     "picks": "bun scripts/picks.ts",
-    "capstone": "bun scripts/capstone.ts"
+    "capstone": "bun scripts/capstone.ts",
+    "hcp": "bun case-studies/hcp-medinfo/cli.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.103",
