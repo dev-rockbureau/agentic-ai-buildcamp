@@ -90,12 +90,14 @@ export function readQuestions(): Question[] {
   return readJson<Question[]>("questions.json");
 }
 
-// Each version's body lives in world/documents/<doc_id>@<version>.md.
+// Each version's body lives in world/fixtures/<doc_id>@<version>.md. The folder is named fixtures
+// because these are test data written like real labeling, not learner pages, so the
+// plain-English check skips them.
 export function readDocuments(): ApprovedDocument[] {
   const metas = readJson<DocumentMeta[]>("documents.json");
   return metas.map((meta) => {
     const fileName = `${meta.doc_id}@${meta.version}.md`;
-    const body = readFileSync(join(WORLD_DIR, "documents", fileName), "utf8");
+    const body = readFileSync(join(WORLD_DIR, "fixtures", fileName), "utf8");
     return { ...meta, body, content_hash: sha256(body) };
   });
 }
