@@ -1,0 +1,11 @@
+{
+  "label": "Q-004.srd_match",
+  "role": "fast",
+  "reply": "{\"doc_id\": null, \"coverage\": \"none\"}",
+  "usage": {
+    "input_tokens": 330,
+    "output_tokens": 176,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Q-004.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"How long can Zentrava tablets be kept after the bottle is opened?\", \"At what temperature should Zentrava tablets be stored after the bottle is opened?\"]}",
+  "usage": {
+    "input_tokens": 169,
+    "output_tokens": 63,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

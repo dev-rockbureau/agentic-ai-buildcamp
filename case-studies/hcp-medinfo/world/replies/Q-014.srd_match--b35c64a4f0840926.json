@@ -1,0 +1,11 @@
+{
+  "label": "Q-014.srd_match",
+  "role": "fast",
+  "reply": "{\"doc_id\": \"SRD-ZEN-FOOD@1\", \"coverage\": \"full\"}",
+  "usage": {
+    "input_tokens": 626,
+    "output_tokens": 141,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

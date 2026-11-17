@@ -1,0 +1,11 @@
+{
+  "label": "Q-012.topic_check",
+  "role": "fast",
+  "reply": "{\"topics\": []}",
+  "usage": {
+    "input_tokens": 320,
+    "output_tokens": 9,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

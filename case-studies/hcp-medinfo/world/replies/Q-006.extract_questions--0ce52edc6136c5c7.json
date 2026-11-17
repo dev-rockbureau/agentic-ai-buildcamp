@@ -1,0 +1,11 @@
+{
+  "label": "Q-006.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"A patient developed a rash two weeks after starting Zentrava 20 mg; should the dose be lowered or the drug stopped?\"]}",
+  "usage": {
+    "input_tokens": 178,
+    "output_tokens": 54,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

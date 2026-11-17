@@ -1,0 +1,11 @@
+{
+  "label": "Q-002.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Zentrava can be taken with or without food, so it does not need to be taken on an empty stomach.\", \"cites\": [\"PI-ZEN-EU@3#4\"]}, {\"text\": \"The tablet should be swallowed whole with a glass of water.\", \"cites\": [\"PI-ZEN-EU@3#4\"]}]}",
+  "usage": {
+    "input_tokens": 298,
+    "output_tokens": 120,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

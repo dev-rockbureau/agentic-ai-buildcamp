@@ -1,0 +1,11 @@
+{
+  "label": "Q-015.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"What should a patient do if they forget to take Orvelan in the morning?\"]}",
+  "usage": {
+    "input_tokens": 161,
+    "output_tokens": 34,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

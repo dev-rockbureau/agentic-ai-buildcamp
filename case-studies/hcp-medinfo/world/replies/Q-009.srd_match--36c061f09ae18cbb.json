@@ -1,0 +1,11 @@
+{
+  "label": "Q-009.srd_match",
+  "role": "fast",
+  "reply": "{\"doc_id\": \"SRD-ZEN-ALCOHOL@1\", \"coverage\": \"full\"}",
+  "usage": {
+    "input_tokens": 602,
+    "output_tokens": 149,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

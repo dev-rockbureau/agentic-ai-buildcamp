@@ -1,0 +1,11 @@
+{
+  "label": "Q-003.srd_match",
+  "role": "fast",
+  "reply": "{\"doc_id\": \"SRD-ZEN-CRUSH@2\", \"coverage\": \"full\"}",
+  "usage": {
+    "input_tokens": 666,
+    "output_tokens": 113,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

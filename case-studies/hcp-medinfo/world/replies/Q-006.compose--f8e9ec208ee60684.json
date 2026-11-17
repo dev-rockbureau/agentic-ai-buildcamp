@@ -1,0 +1,11 @@
+{
+  "label": "Q-006.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"The labeling says to stop Zentrava if a severe rash or blistering appears, and to tell the patient to seek medical care.\", \"cites\": [\"PI-ZEN-US@4#6\"]}, {\"text\": \"Serious skin reactions, including severe rash, have been reported with Zentrava.\", \"cites\": [\"PI-ZEN-US@4#6\"]}]}",
+  "usage": {
+    "input_tokens": 887,
+    "output_tokens": 134,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

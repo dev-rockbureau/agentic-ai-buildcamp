@@ -1,0 +1,11 @@
+{
+  "label": "Q-015.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"If a patient forgets to take Orvelan in the morning, they should take the missed dose as soon as possible on the same day.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}, {\"text\": \"If the next day has already started, they should skip the missed dose and take the next dose at the usual time.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}, {\"text\": \"Patients should never take two doses on the same day.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}]}",
+  "usage": {
+    "input_tokens": 316,
+    "output_tokens": 202,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

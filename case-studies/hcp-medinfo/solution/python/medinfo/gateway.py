@@ -32,6 +32,12 @@ ACKNOWLEDGMENT = (
     "Thank you for your question ({question_id}). A {queue} reviewer has it. "
     "We aim to reply by {due}."
 )
+# The rep redirect: a rep asked about a use that isn't approved. The rep gets no medical answer.
+REP_REDIRECT = (
+    "Thank you for passing this on ({question_id}). Questions about uses that are not approved "
+    "can only be answered for the healthcare professional who asks. Please ask them to contact "
+    "Medical Information directly."
+)
 
 
 @dataclass(frozen=True)
@@ -62,6 +68,16 @@ def _insert_once(connection: psycopg.Connection, question_id: str, values: tuple
     if connection.execute(INSERT, values).rowcount == 1:
         message = {"message_id": values[0], "kind": values[2], "signature_hash": values[5]}
         record(connection, question_id, "message_sent", message)
+
+
+def send_rep_redirect(question_id: str) -> Sent:
+    """A fixed template, so it needs no signature. It goes to the rep who asked."""
+    text = REP_REDIRECT.format(question_id=question_id)
+    with connect("gateway") as connection:
+        recipient = _requester(connection, question_id)
+        values = (f"M-{question_id}", question_id, "rep_reply", recipient.id, text, None)
+        _insert_once(connection, question_id, values)
+    return Sent(True)
 
 
 def _current_sources(connection: psycopg.Connection, citations: list[dict]) -> list[dict | None]:

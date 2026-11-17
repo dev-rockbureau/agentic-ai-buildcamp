@@ -1,0 +1,11 @@
+{
+  "label": "Q-017.compose",
+  "role": "smart",
+  "reply": "{\"sentences\":[{\"text\":\"The recommended dose of Orvelan is 5 mg once daily.\",\"cites\":[\"PI-ORV-US@2#2\"]},{\"text\":\"The dose may be increased to 10 mg once daily after 4 weeks, and the maximum daily dose is 10 mg.\",\"cites\":[\"PI-ORV-US@2#2\"]},{\"text\":\"If a dose is missed, it should be taken as soon as possible on the same day.\",\"cites\":[\"PI-ORV-US@2#3\",\"SRD-ORV-MISSED-DOSE@1#2\"]},{\"text\":\"If the next day has already started, the missed dose should be skipped and the next dose taken at the usual time.\",\"cites\":[\"SRD-ORV-MISSED-DOSE@1#2\"]},{\"text\":\"Two doses should never be taken on the same day.\",\"cites\":[\"SRD-ORV-MISSED-DOSE@1#2\",\"PI-ORV-US@2#3\"]}]}",
+  "usage": {
+    "input_tokens": 524,
+    "output_tokens": 645,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Q-011.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Can Zentrava be given to children aged 8 to 12?\"]}",
+  "usage": {
+    "input_tokens": 175,
+    "output_tokens": 32,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

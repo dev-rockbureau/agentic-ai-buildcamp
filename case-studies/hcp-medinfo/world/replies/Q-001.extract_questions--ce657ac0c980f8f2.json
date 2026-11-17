@@ -1,0 +1,11 @@
+{
+  "label": "Q-001.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"What should a patient do if she missed yesterday's dose of Orvelan?\"]}",
+  "usage": {
+    "input_tokens": 165,
+    "output_tokens": 36,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

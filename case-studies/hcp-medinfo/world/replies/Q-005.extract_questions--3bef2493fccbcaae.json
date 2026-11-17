@@ -1,0 +1,11 @@
+{
+  "label": "Q-005.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Is there any data on using Zentrava in children around 10 years old?\"]}",
+  "usage": {
+    "input_tokens": 160,
+    "output_tokens": 33,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

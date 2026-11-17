@@ -1,0 +1,11 @@
+{
+  "label": "Q-009.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Can patients drink alcohol while taking Zentrava?\"]}",
+  "usage": {
+    "input_tokens": 194,
+    "output_tokens": 31,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

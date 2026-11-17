@@ -1,0 +1,11 @@
+{
+  "label": "Q-010.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"What is the maximum daily dose of Zentrava?\"]}",
+  "usage": {
+    "input_tokens": 156,
+    "output_tokens": 29,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

@@ -2,7 +2,7 @@
 //
 //   seed                  reset the database and load the synthetic world
 //   check                 reseed, then run the check's rules against the solution in pipeline.toml
-//                         (so far: firewall, retrieval, delivery, identity, safety, audit)
+//                         (so far: firewall, retrieval, delivery, identity, routes, safety, audit)
 //   scan <question_id>    the safety scan alone (safe to run again)
 //   ask <question_id>     the safety scan, then the graph until it waits for review
 //   resume <question_id>  carry on a paused question with its recorded decision
@@ -16,6 +16,7 @@ import { checkDelivery } from "./lib/delivery";
 import { checkFirewall, type Line } from "./lib/firewall";
 import { checkIdentity } from "./lib/identity";
 import { checkRetrieval } from "./lib/retrieval";
+import { checkRoutes } from "./lib/routes";
 import { checkSafety } from "./lib/safety";
 import { seed } from "./lib/seed";
 import { invocation, runSolution, solutionName } from "./lib/solution";
@@ -44,7 +45,11 @@ async function check(): Promise<number> {
   ];
   // The rules below look at every question, so ask the ones no rule has asked yet.
   for (const question of readQuestions()) runSolution(["ask", question.id]);
-  results.push(printLines("safety", await checkSafety()), printLines("audit", await checkAudit()));
+  results.push(
+    printLines("routes", await checkRoutes()),
+    printLines("safety", await checkSafety()),
+    printLines("audit", await checkAudit()),
+  );
   const failed = results.some(Boolean);
   console.log(failed ? "Some lines did not pass." : "Every line passes.");
   return failed ? 1 : 0;

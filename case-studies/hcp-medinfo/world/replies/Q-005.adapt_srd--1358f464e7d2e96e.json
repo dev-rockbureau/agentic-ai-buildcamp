@@ -1,0 +1,11 @@
+{
+  "label": "Q-005.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"In the open-label study ZEN-PED-01, 12 children aged 8 to 17 took Zentrava 10 mg once daily for 12 weeks, so that age range includes children around 10 years old.\", \"cites\": [\"SRD-ZEN-PEDS@1#3\"]}, {\"text\": \"Headache was reported in 2 of 12 children.\", \"cites\": [\"SRD-ZEN-PEDS@1#3\"]}, {\"text\": \"No serious adverse events were reported.\", \"cites\": [\"SRD-ZEN-PEDS@1#3\"]}, {\"text\": \"No data are available for children under 8 years.\", \"cites\": [\"SRD-ZEN-PEDS@1#4\"]}]}",
+  "usage": {
+    "input_tokens": 395,
+    "output_tokens": 246,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

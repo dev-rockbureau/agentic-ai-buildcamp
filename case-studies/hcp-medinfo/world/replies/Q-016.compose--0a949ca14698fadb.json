@@ -1,0 +1,11 @@
+{
+  "label": "Q-016.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"The recommended Zentrava dose is 20 mg by mouth once daily, which is also the maximum daily dose.\", \"cites\": [\"PI-ZEN-US@4#2\"]}, {\"text\": \"The 10 mg once-daily dose is specified for patients with an eGFR of 30 to 59 mL/min.\", \"cites\": [\"PI-ZEN-US@4#3\"]}, {\"text\": \"Serious skin reactions, including severe rash, have been reported with Zentrava.\", \"cites\": [\"PI-ZEN-US@4#6\"]}, {\"text\": \"Zentrava should be stopped if a severe rash or blistering appears, and the patient should be told to seek medical care.\", \"cites\": [\"PI-ZEN-US@4#6\"]}]}",
+  "usage": {
+    "input_tokens": 860,
+    "output_tokens": 595,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

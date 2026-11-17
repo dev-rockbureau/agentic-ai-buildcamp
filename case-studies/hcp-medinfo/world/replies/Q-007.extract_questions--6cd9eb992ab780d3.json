@@ -1,0 +1,11 @@
+{
+  "label": "Q-007.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Can Zentrava be taken together with St John's wort?\"]}",
+  "usage": {
+    "input_tokens": 157,
+    "output_tokens": 30,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

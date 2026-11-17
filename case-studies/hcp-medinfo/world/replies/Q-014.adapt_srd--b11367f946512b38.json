@@ -1,0 +1,11 @@
+{
+  "label": "Q-014.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Zentrava can be taken with or without food.\", \"cites\": [\"SRD-ZEN-FOOD@1#2\"]}, {\"text\": \"A high-fat meal raised Zentrava exposure by 15%, which is not expected to matter clinically.\", \"cites\": [\"SRD-ZEN-FOOD@1#2\"]}, {\"text\": \"This comes from study ZEN-FE-02, in which 20 healthy adults took Zentrava 20 mg fasting and after a high-fat meal, and exposure was 15% higher after the meal.\", \"cites\": [\"SRD-ZEN-FOOD@1#3\"]}]}",
+  "usage": {
+    "input_tokens": 490,
+    "output_tokens": 221,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

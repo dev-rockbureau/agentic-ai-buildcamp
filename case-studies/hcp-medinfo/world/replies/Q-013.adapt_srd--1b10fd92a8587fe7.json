@@ -1,0 +1,11 @@
+{
+  "label": "Q-013.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Patients taking Orvelan should avoid large amounts of grapefruit juice.\", \"cites\": [\"SRD-ORV-GRAPEFRUIT@1#2\"]}, {\"text\": \"One glass of 250 mL a day raised orvelastat exposure by 40%.\", \"cites\": [\"SRD-ORV-GRAPEFRUIT@1#2\"]}, {\"text\": \"This comes from study ORV-DDI-05, in which 16 healthy adults took Orvelan 5 mg with 250 mL of grapefruit juice daily for 7 days, and orvelastat exposure rose by 40%.\", \"cites\": [\"SRD-ORV-GRAPEFRUIT@1#3\"]}]}",
+  "usage": {
+    "input_tokens": 627,
+    "output_tokens": 251,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

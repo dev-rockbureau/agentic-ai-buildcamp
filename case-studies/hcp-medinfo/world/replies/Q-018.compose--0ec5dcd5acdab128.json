@@ -1,0 +1,11 @@
+{
+  "label": "Q-018.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"The usual dose of Orvelan is 5 mg once daily.\", \"cites\": [\"PI-ORV-EU@2#2\"]}, {\"text\": \"If needed, the dose can be raised to 10 mg once daily after 4 weeks, and 10 mg per day should not be exceeded.\", \"cites\": [\"PI-ORV-EU@2#2\"]}]}",
+  "usage": {
+    "input_tokens": 523,
+    "output_tokens": 133,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

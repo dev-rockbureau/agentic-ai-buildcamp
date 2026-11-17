@@ -2,18 +2,15 @@
 
 A question runs until it waits for a reviewer, then the process may exit or be killed. The
 checkpoint keeps the run, and any later process resumes it on the same thread_id (the question
-id). Nothing reaches a doctor except through the gateway, after a signed decision.
+id). Nothing reaches a doctor except through the gateway: a signed reply, or a pre-approved
+template (the acknowledgment, the rep redirect).
 
-Every node adds one entry to the question's audit chain.
-
-Step 3 of the build plan: `draft` and `route` are placeholders. Step 5 replaces the draft with the
-model nodes, and step 6 replaces the route with the verifier's.
+Every node adds one entry to the question's audit chain. Every question passes through `route`,
+which picks its queue. The model steps are in answer_nodes.py. Step 6 adds the verifier.
 """
 
 import datetime
-import re
 from dataclasses import asdict
-from typing import TypedDict
 
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph import END, START, StateGraph
@@ -21,10 +18,12 @@ from langgraph.types import Command, interrupt
 from psycopg.types.json import Jsonb
 
 from medinfo import gateway, knowledge_service
+from medinfo.answer_nodes import choose_queue, draft, extract_questions, srd_match, topic_check
 from medinfo.audit import record, record_alone
 from medinfo.database import checkpointer, connect
 from medinfo.policy import load_policy
 from medinfo.profile_service import Requester, medical_view
+from medinfo.run_state import Run, trace
 
 QUESTION = "select requester_id, text from medical.questions where id = %s"
 # One item per question. A repeat with the same queue and draft changes nothing and returns no
@@ -47,28 +46,17 @@ NEXT_NODE = {
     "set_country": "load_context",
 }
 FINISH_ITEM = "update review.items set status = %s, reasons = reasons || %s where id = %s"
-FINISH_QUESTION = "update medical.questions set status = %s where id = %s"
-
-
-class Run(TypedDict, total=False):
-    question_id: str
-    requester: dict
-    question_text: str
-    search_status: str
-    passages: list[dict]
-    draft: list[dict]
-    queue: str
-    reasons: list[str]
-    due_at: str | None
-    decision_id: int
-    decision_action: str
-    acknowledged: bool
-    outcome: str
-
-
-def trace(node: str) -> None:
-    """One line per node that runs, so a resume can be seen not to start over."""
-    print(f"  node {node}", flush=True)
+SET_STATUS = "update medical.questions set status = %s where id = %s"
+# What load_context clears, so a question that runs again after the steward starts clean.
+FRESH = {
+    "questions": [],
+    "topics": [],
+    "search_status": None,
+    "passages": [],
+    "srd_match": None,
+    "draft": [],
+    "model_problems": [],
+}
 
 
 def load_context(run: Run) -> dict:
@@ -78,7 +66,7 @@ def load_context(run: Run) -> dict:
         requester = medical_view(connection, question["requester_id"])
         seen = {"requester_id": requester.id, "kind": requester.kind, "country": requester.country}
         record(connection, run["question_id"], "load_context", seen)
-    return {"requester": asdict(requester), "question_text": question["text"]}
+    return {**FRESH, "requester": asdict(requester), "question_text": question["text"]}
 
 
 def retrieve(run: Run) -> dict:
@@ -98,27 +86,8 @@ def retrieve(run: Run) -> dict:
     }
 
 
-def first_sentence(text: str) -> str:
-    return re.split(r"(?<=[.!?])\s", text.strip(), maxsplit=1)[0]
-
-
-def draft(run: Run) -> dict:
-    """Placeholder until step 5: the opening sentence of each of the two best passages, each
-    citing its own section. It is enough to exercise review, signing and the gateway."""
-    trace("draft")
-    best = run["passages"][:2]
-    sentences = [
-        {"text": first_sentence(passage["text"]), "cites": [passage["chunk_id"]]}
-        for passage in best
-    ]
-    cites = [chunk for sentence in sentences for chunk in sentence["cites"]]
-    entry = {"sentences": len(sentences), "cites": cites, "model_role": None}
-    record_alone("graph", run["question_id"], "draft", entry)
-    return {"draft": sentences}
-
-
-def due_at(queue: str) -> str | None:
-    minutes = load_policy()["queues"][queue]["due_minutes"]
+def due_at(queue: str | None) -> str | None:
+    minutes = load_policy()["queues"][queue]["due_minutes"] if queue else None
     if minutes is None:
         return None
     due = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=minutes)
@@ -126,18 +95,15 @@ def due_at(queue: str) -> str | None:
 
 
 def route(run: Run) -> dict:
-    """Placeholder until step 6, which routes on topics, the SRD match and the verifier."""
     trace("route")
-    queue, reasons = {
-        "country_unknown": ("identity_resolution", ["country unknown"]),
-        "nothing_found": ("writer_needed", ["no approved answer"]),
-    }.get(run["search_status"], ("light_check", ["placeholder route (step 3)"]))
-    record_alone("graph", run["question_id"], "route", {"queue": queue, "reasons": reasons})
+    queue, reasons = choose_queue(run, load_policy()["topics"])
+    routed = {"queue": queue, "reasons": reasons, "topics": run.get("topics", [])}
+    record_alone("graph", run["question_id"], "route", routed)
     return {"queue": queue, "reasons": reasons, "due_at": due_at(queue)}
 
 
 def acknowledge(run: Run) -> dict:
-    """Doctors get a pre-approved acknowledgment. Reps and unresolved requesters don't."""
+    """Doctors get a pre-approved acknowledgment. Reps don't."""
     trace("acknowledge")
     doctor = run["requester"]["kind"] == "doctor"
     if doctor:
@@ -162,6 +128,7 @@ def queue_item(run: Run) -> None:
     rest = (Jsonb(citations(run)), run["reasons"], run["due_at"])
     with connect("graph") as connection:
         if connection.execute(UPSERT_ITEM, (*item, *rest)).fetchone():
+            connection.execute(SET_STATUS, ("waiting", question_id))
             queued = {"item_id": item_id, "queue": run["queue"]}
             record(connection, question_id, "review_queued", queued)
 
@@ -183,7 +150,7 @@ def finish(question_id: str, status: str, entry_type: str, reasons: list[str]) -
     """Close the item and the question, and record the final state, in one transaction."""
     with connect("graph") as connection:
         connection.execute(FINISH_ITEM, (status, reasons, f"RV-{question_id}"))
-        connection.execute(FINISH_QUESTION, (status, question_id))
+        connection.execute(SET_STATUS, (status, question_id))
         record(connection, question_id, entry_type, {"outcome": status, "reasons": reasons})
 
 
@@ -204,26 +171,74 @@ def close(run: Run) -> dict:
     return {"outcome": outcome}
 
 
+def redirect(run: Run) -> dict:
+    """A rep asked an off-label question. The rep gets the pre-approved redirect, no answer."""
+    trace("redirect")
+    gateway.send_rep_redirect(run["question_id"])
+    finish(run["question_id"], "rep_redirect", "redirect", run["reasons"])
+    return {"outcome": "rep_redirect"}
+
+
+def after_load(run: Run) -> str:
+    # An unknown country gets no search and no medical answer: straight to the data steward.
+    return "route" if run["requester"]["country"] is None else "extract_questions"
+
+
+def after_topics(run: Run) -> str:
+    """A rep's off-label question and a human-only topic get no search and no draft."""
+    human_only = set(run["topics"]) & set(load_policy()["topics"]["human_only"])
+    rep_off_label = run["requester"]["kind"] == "rep" and "off_label" in run["topics"]
+    return "route" if human_only or rep_off_label else "retrieve"
+
+
+def after_search(run: Run) -> str:
+    # Nothing approved found: no SRD match and no draft. The route sends it to a writer.
+    return "srd_match" if run["search_status"] == "found" else "route"
+
+
+def after_route(run: Run) -> str:
+    if run["queue"] is None:
+        return "redirect"
+    # An unresolved requester gets no acknowledgment: there is nobody verified to send it to.
+    return "review" if run["queue"] == "identity_resolution" else "acknowledge"
+
+
+NODES = (
+    load_context,
+    extract_questions,
+    topic_check,
+    retrieve,
+    srd_match,
+    draft,
+    route,
+    acknowledge,
+    review,
+    send,
+    close,
+    redirect,
+)
+
+
 def build_graph(saver: PostgresSaver):
     builder = StateGraph(Run)
-    for node in (load_context, retrieve, draft, route, acknowledge, review, send, close):
+    for node in NODES:
         builder.add_node(node.__name__, node)
     builder.add_edge(START, "load_context")
-    builder.add_edge("load_context", "retrieve")
-    builder.add_edge("retrieve", "draft")
+    builder.add_conditional_edges("load_context", after_load, ["route", "extract_questions"])
+    builder.add_edge("extract_questions", "topic_check")
+    builder.add_conditional_edges("topic_check", after_topics, ["route", "retrieve"])
+    builder.add_conditional_edges("retrieve", after_search, ["srd_match", "route"])
+    builder.add_edge("srd_match", "draft")
     builder.add_edge("draft", "route")
-    # An unresolved requester gets no acknowledgment: there is nobody verified to send it to.
-    builder.add_conditional_edges(
-        "route", lambda run: "review" if run["queue"] == "identity_resolution" else "acknowledge"
-    )
+    builder.add_conditional_edges("route", after_route, ["redirect", "review", "acknowledge"])
     builder.add_edge("acknowledge", "review")
     # Setting a country sends the question back to the start, now that it has one.
     review_next = ["send", "close", "load_context"]
     builder.add_conditional_edges(
         "review", lambda run: NEXT_NODE[run["decision_action"]], review_next
     )
-    builder.add_edge("send", END)
-    builder.add_edge("close", END)
+    for last in ("send", "close", "redirect"):
+        builder.add_edge(last, END)
     return builder.compile(checkpointer=saver)
 
 
@@ -236,6 +251,8 @@ def summary(question_id: str, result: dict) -> str:
         return f"{question_id} → sent as M-{question_id}."
     if result["outcome"] == "send_refused":
         return f"{question_id} → the gateway refused to send: {result['reasons'][-1]}."
+    if result["outcome"] == "rep_redirect":
+        return f"{question_id} → the rep was sent the redirect template, M-{question_id}."
     return f"{question_id} → {result['outcome']}."
 
 

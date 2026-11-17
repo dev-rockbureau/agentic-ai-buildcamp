@@ -1,0 +1,11 @@
+{
+  "label": "Q-001.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Because the missed dose was yesterday, the next day has already started, so she should skip the missed dose and take the next dose at the usual time.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}, {\"text\": \"She should never take two doses on the same day.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}]}",
+  "usage": {
+    "input_tokens": 478,
+    "output_tokens": 138,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

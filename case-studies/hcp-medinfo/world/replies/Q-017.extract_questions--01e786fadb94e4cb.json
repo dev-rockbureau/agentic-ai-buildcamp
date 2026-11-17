@@ -1,0 +1,11 @@
+{
+  "label": "Q-017.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"What dose should a patient restart at after an emergency room visit the day after starting Orvelan?\"]}",
+  "usage": {
+    "input_tokens": 169,
+    "output_tokens": 41,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

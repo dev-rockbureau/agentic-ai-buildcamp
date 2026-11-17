@@ -1,0 +1,11 @@
+{
+  "label": "Q-010.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"The maximum daily dose of Zentrava is 40 mg.\", \"cites\": [\"PI-ZEN-US@4#2\"]}, {\"text\": \"This matches the recommended dose of 20 mg taken by mouth once daily.\", \"cites\": [\"PI-ZEN-US@4#2\"]}, {\"text\": \"For patients with an eGFR of 30 to 59 mL/min, the dose is 10 mg once daily.\", \"cites\": [\"PI-ZEN-US@4#3\"]}, {\"text\": \"Zentrava is not recommended when the eGFR is below 30 mL/min.\", \"cites\": [\"PI-ZEN-US@4#3\"]}]}",
+  "usage": {
+    "input_tokens": 409,
+    "output_tokens": 233,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic, then edited by hand for trap T9: the first sentence said 20 mg, and now gives 40 mg, a dose the cited source doesn't contain"
+}

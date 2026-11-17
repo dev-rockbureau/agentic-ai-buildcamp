@@ -1,0 +1,11 @@
+{
+  "label": "Q-003.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Can Zentrava tablets be crushed?\"]}",
+  "usage": {
+    "input_tokens": 166,
+    "output_tokens": 27,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

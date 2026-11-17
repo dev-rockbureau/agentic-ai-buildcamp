@@ -32,6 +32,7 @@
     "Q-005": {
       "trap": "T4",
       "queue": "full_review",
+      "draft": true,
       "outcome": "sent",
       "topics": ["off_label"],
       "safety_packet": false

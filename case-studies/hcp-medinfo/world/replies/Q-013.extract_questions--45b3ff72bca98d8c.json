@@ -1,0 +1,11 @@
+{
+  "label": "Q-013.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Is it a problem for a patient taking Orvelan to drink grapefruit juice every morning?\"]}",
+  "usage": {
+    "input_tokens": 171,
+    "output_tokens": 43,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

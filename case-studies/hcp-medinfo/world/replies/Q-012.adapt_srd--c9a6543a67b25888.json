@@ -1,0 +1,11 @@
+{
+  "label": "Q-012.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"A dedicated study did not show an interaction between Zentrava and alcohol.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#2\"]}, {\"text\": \"Patients who drink should keep to moderate amounts.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#2\"]}]}",
+  "usage": {
+    "input_tokens": 388,
+    "output_tokens": 124,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

@@ -17,7 +17,8 @@ type Entry = {
 
 const ENTRIES = `select question_id, seq, type, payload::text as payload_text, prev_hash, hash
   from audit.entries order by question_id, seq`;
-const ITEMS = "select question_id, status from review.items";
+// The question's status, which the graph sets when it queues, sends, closes or redirects.
+const STATUSES = "select id as question_id, status from medical.questions";
 // Every message and every decision must have its own entry in the chain.
 const UNRECORDED = `select question_id, 'message ' || id as what from outbox.messages m
   where not exists (select 1 from audit.entries a where a.question_id = m.question_id
@@ -27,15 +28,16 @@ const UNRECORDED = `select question_id, 'message ' || id as what from outbox.mes
   join review.items i on i.id = d.item_id
   where not exists (select 1 from audit.entries a where a.question_id = i.question_id
     and a.type = 'decision' and (a.payload->>'decision_id')::bigint = d.id)`;
-// The steps every question goes through before it waits for review, in this order.
-const STEPS = ["load_context", "retrieve", "draft", "route", "review_queued"];
+// The steps every question goes through, in this order. Which steps follow depends on the route.
+const STEPS = ["load_context", "route"];
 const START = "0".repeat(64);
 
-// The entry a chain may end with, and the item statuses each one goes with.
+// The entry a chain may end with, and the question statuses each one goes with.
 const FINAL_STATES: Record<string, string[]> = {
   review_queued: ["waiting"],
   send: ["sent", "send_refused"],
   close: ["rejected", "closed"],
+  redirect: ["rep_redirect"],
 };
 
 function chainBreak(entries: Entry[]): string | undefined {
@@ -66,7 +68,8 @@ function endProblem(entries: Entry[], status: string | undefined): string | unde
   const last = entries[entries.length - 1].type;
   const statuses = FINAL_STATES[last];
   if (!statuses) return `ends with ${last}`;
-  if (!status || !statuses.includes(status)) return `ends with ${last}, but its item is ${status}`;
+  if (!status || !statuses.includes(status))
+    return `ends with ${last}, but its status is ${status}`;
   return undefined;
 }
 
@@ -75,7 +78,7 @@ type Problems = { broken: string[]; missing: string[]; unfinished: string[] };
 const SAYS: Record<keyof Problems, string> = {
   broken: "every question has an audit chain, and none is broken",
   missing: "every chain starts with the safety scan and records every step",
-  unfinished: "every chain ends in a final state that matches its review item",
+  unfinished: "every chain ends in a final state that matches the question's status",
 };
 
 const KEYS = Object.keys(SAYS) as (keyof Problems)[];
@@ -100,8 +103,8 @@ async function readChains(): Promise<Map<string, Entry[]>> {
 
 async function findProblems(): Promise<Problems> {
   const chains = await readChains();
-  const items = await checkerQuery<{ question_id: string; status: string }>(ITEMS);
-  const statusOf = new Map(items.map((item) => [item.question_id, item.status]));
+  const rows = await checkerQuery<{ question_id: string; status: string }>(STATUSES);
+  const statusOf = new Map(rows.map((row) => [row.question_id, row.status]));
   const found: Problems = { broken: [], missing: [], unfinished: [] };
   for (const { id } of readQuestions()) {
     const problems = chainProblems(chains.get(id), statusOf.get(id));

@@ -1,0 +1,11 @@
+{
+  "label": "Q-018.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"What is the usual starting dose of Orvelan?\"]}",
+  "usage": {
+    "input_tokens": 155,
+    "output_tokens": 28,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

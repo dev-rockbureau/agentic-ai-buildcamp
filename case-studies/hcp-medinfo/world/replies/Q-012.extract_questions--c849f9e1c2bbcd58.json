@@ -1,0 +1,11 @@
+{
+  "label": "Q-012.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Is it a problem if a patient taking Zentrava drinks a glass of wine with dinner?\"]}",
+  "usage": {
+    "input_tokens": 169,
+    "output_tokens": 43,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Q-009.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"No interaction between Zentrava and alcohol was seen in a dedicated study.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#2\"]}, {\"text\": \"Patients who drink should keep to moderate amounts.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#2\"]}, {\"text\": \"In study ZEN-DDI-03, 18 healthy adults took Zentrava 20 mg with and without 0.5 g/kg of alcohol.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#3\"]}, {\"text\": \"Zentrava exposure did not change, and alcohol levels did not change.\", \"cites\": [\"SRD-ZEN-ALCOHOL@1#3\"]}]}",
+  "usage": {
+    "input_tokens": 508,
+    "output_tokens": 270,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

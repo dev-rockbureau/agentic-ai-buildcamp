@@ -1,0 +1,11 @@
+{
+  "label": "Q-004.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Zentrava tablets should be stored at 20 to 25 °C.\", \"cites\": [\"PI-ZEN-US@4#10\"]}, {\"text\": \"The tablets should be kept in the original bottle to protect them from moisture.\", \"cites\": [\"PI-ZEN-US@4#10\"]}]}",
+  "usage": {
+    "input_tokens": 441,
+    "output_tokens": 114,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

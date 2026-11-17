@@ -1,0 +1,11 @@
+{
+  "label": "Q-016.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Is a 10 mg dose of Zentrava safer for a patient who developed hives after taking a second tablet?\"]}",
+  "usage": {
+    "input_tokens": 174,
+    "output_tokens": 48,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}
