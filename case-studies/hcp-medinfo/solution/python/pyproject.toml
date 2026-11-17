@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "Reference solution: the HCP medical information pipeline, Medical Question Helper"
 requires-python = ">=3.11"
 dependencies = [
+  "langgraph==1.2.21",
+  "langgraph-checkpoint-postgres==3.2.0",
   "psycopg[binary]==3.3.9",
   "pyyaml==6.0.2",
 ]

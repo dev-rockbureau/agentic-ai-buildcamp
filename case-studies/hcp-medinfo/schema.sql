@@ -116,6 +116,8 @@ create table review.reviewers (
   pin_hash text not null
 );
 
+-- One item per question, with id RV-<question id>. The review node may run again on resume, so it
+-- inserts with on conflict do nothing.
 create table review.items (
   id text primary key,
   thread_id text not null,
@@ -140,6 +142,8 @@ create table review.decisions (
   diff text,
   meaning text,
   override_reasons jsonb,
+  -- What the signature covers besides the text: doc_id@version@content_hash of each cited source.
+  signed_sources text[],
   signature_hash text,
   signed_at timestamptz not null default now()
 );
@@ -153,6 +157,8 @@ create table outbox.messages (
   text text not null,
   signature_hash text,
   sent_at timestamptz not null default now(),
+  -- Postgres fills this in, so the check can prove only the gateway role ever wrote a message.
+  written_by text not null default current_user,
   unique (question_id, kind)
 );
 

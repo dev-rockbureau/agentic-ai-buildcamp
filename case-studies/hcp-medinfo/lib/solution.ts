@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { CASE_STUDY_DIR } from "./world";
 
-type SolutionCommands = { directory: string; search: string[] };
+type SolutionCommands = { directory: string; command: string[] };
 type PipelineFile = { solution: string } & Record<string, SolutionCommands>;
 
 export type SearchedPassage = {
@@ -23,6 +23,8 @@ export type SearchOutput = {
   status: "found" | "nothing_found" | "country_unknown";
   passages: SearchedPassage[];
 };
+
+export type Ran = { status: number | null; stdout: string; stderr: string };
 
 function readPipeline(): { name: string; commands: SolutionCommands } {
   const text = readFileSync(join(CASE_STUDY_DIR, "pipeline.toml"), "utf8");
@@ -44,15 +46,28 @@ function environment(): NodeJS.ProcessEnv {
   return { ...process.env, ...names };
 }
 
-export function runSearch(questionId: string): SearchOutput {
+// The full command line, the folder to run it in, and its environment.
+export function invocation(args: string[]) {
   const { commands } = readPipeline();
-  const command = commands.search.map((part) => part.replace("{question_id}", questionId));
   const cwd = join(CASE_STUDY_DIR, commands.directory);
-  const run = spawnSync(command[0], command.slice(1), {
-    cwd,
-    env: environment(),
-    encoding: "utf8",
-  });
+  return { command: [...commands.command, ...args], cwd, env: environment() };
+}
+
+// Run the solution to the end. `input` is written to its standard input, such as a PIN.
+export function runSolution(args: string[], input = ""): Ran {
+  const { command, cwd, env } = invocation(args);
+  const run = spawnSync(command[0], command.slice(1), { cwd, env, input, encoding: "utf8" });
+  return { status: run.status, stdout: run.stdout, stderr: run.stderr };
+}
+
+// Start the solution without waiting, so the check can kill it part way through.
+export function startSolution(args: string[]) {
+  const { command, cwd, env } = invocation(args);
+  return Bun.spawn(command, { cwd, env, stdin: "ignore", stdout: "pipe", stderr: "pipe" });
+}
+
+export function runSearch(questionId: string): SearchOutput {
+  const run = runSolution(["search", questionId]);
   if (run.status !== 0) {
     throw new Error(`search ${questionId} exited with ${run.status}: ${run.stderr.trim()}`);
   }

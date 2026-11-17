@@ -35,6 +35,9 @@ limit %(top_k)s
 
 PRODUCTS = "select distinct product from knowledge.documents order by product"
 
+VERSION = """select doc_id, version, status, countries, approved_use, effective_date, expiry_date,
+  content_hash from knowledge.documents where doc_id = %s and version = %s"""
+
 
 @dataclass(frozen=True)
 class Passage:
@@ -90,3 +93,23 @@ def search(
     if not passages:
         return SearchResult("nothing_found", [])
     return SearchResult("found", passages)
+
+
+def current_version(connection: psycopg.Connection, doc_id: str, version: int) -> dict | None:
+    """One document version as it stands now, which may differ from when it was retrieved."""
+    return connection.execute(VERSION, (doc_id, version)).fetchone()
+
+
+def why_not_allowed(document: dict, requester: Requester, policy: dict) -> str | None:
+    """The same rules as the search filters, for a version that was cited earlier."""
+    key = f"{document['doc_id']}@{document['version']}"
+    clock = today(policy)
+    if document["status"] != "approved":
+        return f"{key} is {document['status']}"
+    if not document["effective_date"] <= clock < document["expiry_date"]:
+        return f"{key} is not in date"
+    if requester.country not in document["countries"]:
+        return f"{key} is not approved in {requester.country}"
+    if document["approved_use"] not in allowed_uses(policy, requester.kind):
+        return f"{key} can't be used to answer a {requester.kind}"
+    return None

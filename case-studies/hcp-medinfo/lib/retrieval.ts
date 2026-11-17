@@ -8,8 +8,10 @@ import type { Line } from "./firewall";
 import { runSearch, type SearchedPassage, type SearchOutput } from "./solution";
 import { CASE_STUDY_DIR, readPolicy, readQuestions, worldClock } from "./world";
 
-type Expected = {
+export type Expected = {
   trap: string;
+  outcome?: string;
+  change_after_signing?: string;
   queue?: string | null;
   draft?: boolean;
   searched?: boolean;
@@ -38,7 +40,7 @@ function readRules(): Rules {
   return { clock: worldClock(), usesByKind: policy.approved_use as Record<string, string[]> };
 }
 
-function readExpectations(): Record<string, Expected> {
+export function readExpectations(): Record<string, Expected> {
   const text = readFileSync(join(CASE_STUDY_DIR, "world", "traps.json"), "utf8");
   return (JSON.parse(text) as { expected: Record<string, Expected> }).expected;
 }
