@@ -1,43 +1,76 @@
 # Case Study 1: Enterprise Agentic HCP System
 
-## The Problem
+## The problem
 
-A global medicine company talks to doctors, nurses, and pharmacists (called Healthcare Professionals, or HCPs) every day. Right now, the company uses four separate computer systems that do not talk to each other:
+A global medicine company talks to doctors, nurses and pharmacists every day. We call them HCPs. HCP means healthcare professional.
 
-- **Sales App (CRM):** Where sales reps write meeting notes and sample requests.
-- **Email Marketing Tool:** Which sends newsletters and training programs.
-- **Call Center:** Where doctors call with questions about medicine safety and doses.
-- **Website & Chatbots:** Where doctors look up drug facts on their own.
+The company uses four computer systems. These systems do not talk to each other.
 
-Because these four systems are disconnected, big problems happen:
+- **Sales app (CRM):** Sales reps write meeting notes here. They also send sample requests here.
+- **Email tool:** It sends newsletters and training programs.
+- **Call center:** Doctors call here with questions about medicine safety and doses.
+- **Website and chatbots:** Doctors look up medicine facts here on their own.
 
-1. **Spamming Doctors:** A doctor gets three identical emails from different teams, plus a phone call repeating the exact same thing.
-2. **Slow Answers:** A simple medical question takes days to answer because medical and legal teams have to check it by hand.
-3. **Lost Notes:** Helpful notes from sales reps and call centers stay trapped in separate apps and never get shared.
-4. **Compliance Risk:** Every message must use up-to-date, legally approved medical facts, but nobody can easily prove that it does.
+```mermaid
+flowchart LR
+  Sales[Sales app] --> Doctor((Doctor))
+  Email[Email tool] --> Doctor
+  Call[Call center] --> Doctor
+  Web[Website and chatbot] --> Doctor
+```
 
-## Project Goals
+Each system sends its own messages. None of them knows what the others sent.
 
-- **One Shared Profile:** Combine all notes, emails, and call records into one single 360-degree view of each doctor.
-- **Fast, Safe Answers:** Answer doctor questions in minutes using only approved medical documents.
-- **Proof and Control:** Keep humans in charge of risky decisions and record every step so legal teams can verify it.
+Because the four systems are apart, four big problems happen:
 
-## What the System Does
+1. **Too many emails:** A doctor gets three of the same emails from different teams. Then a phone call says the same thing again.
+2. **Slow answers:** A simple medical question can take days. Medical and legal teams check each answer by hand.
+3. **Lost notes:** Good notes from reps and call centers stay in one app. Other teams never see them.
+4. **Risk to the company:** Every message must use medical facts that are up to date and approved. It is hard to prove that each message does.
 
-We are building an AI system on the cloud (AWS) that connects all four tools and uses smart agents to help staff safely:
+## Project goals
 
-- **Medical Question Helper:** When a doctor asks a question from any channel, an AI agent searches approved medical files and writes a draft reply. If the question is tricky or has no approved answer, the agent stops and sends it to a human medical reviewer.
-- **Smart Outreach Planner:** Before a rep or marketer contacts a doctor, an agent checks what that doctor has already received or asked. It then suggests the best next step for the human rep to approve.
-- **Content Fact-Checker:** When building a new email, an agent checks every single medical claim against approved source files. If any sentence is changed or unapproved, it flags it for human review.
-- **Full Audit Trail:** Every draft shows the exact source file it came from, why it is safe, and which human approved it.
+- **One shared profile:** Put all notes, emails and call records in one place for each doctor.
+- **Fast, safe answers:** Answer doctor questions in minutes. Use only approved medical files.
+- **Proof and control:** People make the risky choices. The system records each step, so the legal team can check it.
 
-## Safety Rules
+## What the system does
 
-- **Knows When to Stop:** If the system cannot find an approved answer, it refuses to guess and hands the task to a human.
-- **Country Rules:** The system checks local laws so a doctor in one country only sees content approved for that country.
-- **Fake Test Data Only:** During building and testing, we only use made-up drug names and synthetic doctor profiles.
+We build an AI system on AWS, a cloud service from Amazon. It connects all four tools. AI helpers, called agents, help the staff in a safe way.
 
-## What You Will Build in This Project
+Meet Dr. Lee. Dr. Lee asks a question about the dose of a medicine. Here is what happens next.
 
-1. **The System Blueprint:** A clear diagram showing how data flows from all four apps into one brain, how permissions work, and where humans approve tasks.
-2. **The Working Agent Pipeline:** Code that takes a doctor's question, checks approved documents, traces the source, and pauses for human approval before sending.
+```mermaid
+sequenceDiagram
+  participant Doctor as Dr. Lee
+  participant Agent as AI agent
+  participant Files as Approved files
+  participant Reviewer as Medical reviewer
+  Doctor->>Agent: Asks a question about a dose
+  Agent->>Files: Looks for an approved answer
+  Files-->>Agent: Answer with its source file
+  Agent->>Reviewer: Sends a draft reply with its source
+  Reviewer-->>Doctor: Approved reply
+```
+
+If there is no approved answer, the agent stops. It does not guess. The reviewer answers instead.
+
+For example, the agent finds an approved file for the dose. It writes a draft. A human reviewer checks the draft before Dr. Lee gets it.
+
+The system has four main helpers:
+
+- **Medical question helper:** It searches approved medical files for each question. It writes a draft reply. If the question is hard, it sends the question to a human medical reviewer.
+- **Smart outreach planner:** Before a rep contacts a doctor, an agent checks what the doctor already got. It suggests the next step. A human rep approves it.
+- **Content fact-checker:** When a new email is made, an agent checks each medical claim. It compares each claim with approved files. If a sentence is not approved, it flags it for a human.
+- **Full audit trail:** Each draft shows its source file. It shows why it is safe. It shows which human approved it.
+
+## Safety rules
+
+- **Knows when to stop:** If no approved answer exists, the system does not guess. It gives the task to a human.
+- **Country rules:** The system checks local laws. A doctor in one country sees only content approved for that country.
+- **Fake test data only:** While we build and test, we use only made-up drug names and made-up doctor profiles.
+
+## What you will build in this project
+
+1. **The system blueprint:** A clear diagram. It shows how data moves from the four apps into one place. It shows who has permission. It shows where humans approve tasks.
+2. **The working agent pipeline:** Code that takes a doctor's question. It checks approved documents. It traces each source. It waits for human approval before it sends anything.

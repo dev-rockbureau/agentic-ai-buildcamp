@@ -18,8 +18,6 @@ const SKIPPED_FOLDERS = new Set([
   "recordings",
   "research",
   "fixtures",
-  // The two case study briefs keep their authored wording as problem statements.
-  "case-studies",
 ]);
 
 // Pages for the people who build the course, not for learners.
