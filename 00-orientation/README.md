@@ -29,7 +29,10 @@ flowchart LR
 - **The world** is a freight broker's invoice desk. The **ledger** is the record of every invoice and payment.
 - **Your employee** is yours. It can use any language, SDK and model.
 - **The contract** is the six routes your employee answers.
-- **The checker** sends jobs to your employee. Then it reads the ledger and your traces. A trace is the log of each step your employee took. The checker never takes your employee's reply as proof.
+- **The checker** sends jobs to your employee. Then it reads the ledger and your traces. A trace is the log of each step
+  your employee took.
+
+The checker never takes your employee's reply as proof.
 
 ## 1. Set up
 
@@ -57,7 +60,8 @@ Ready. Next: bun run world freight-audit
 
 A `FAIL` line means you must fix something now. Its `Fix:` line tells you how. A `SKIP` line is optional.
 
-You do not need a model key yet. The reference uses recorded model replies. If you use the Python path, you still install Bun once. The checker runs on Bun.
+You do not need a model key yet. The reference uses recorded model replies. If you use the Python path, you still install Bun
+once. The checker runs on Bun.
 
 ## 2. Start the world
 
@@ -83,7 +87,8 @@ Expect: `Naive employee says: "All 6 invoices paid. Done."`, then the ledger's o
 
 Look at what happened:
 
-- On one invoice, the pay tool wrote the payment and then timed out. The naive employee tried again with a new key, so it paid twice.
+- On one invoice, the pay tool wrote the payment and then timed out. The naive employee tried again with a new key, so it
+  paid twice.
 - On another invoice, every try failed. The naive employee still said done.
 
 Find both rows on the ledger. You need them in step 5.
@@ -100,7 +105,8 @@ Expect: four `Done` lines, one `Needs you` (USD 6,200, over Ravi's limit, waits 
 
 Open `localhost:7702/board` while it runs. A card shows Done only when the ledger agrees.
 
-The reference uses ports 7701 and 7702. In Build, your own employee needs port 7701. So when you have seen the board, press Ctrl+C in the reference's terminal. Then go on to step 5. Leave the world running.
+The reference uses ports 7701 and 7702. In Build, your own employee needs port 7701. So when you have seen the board, press
+Ctrl+C in the reference's terminal. Then go on to step 5. Leave the world running.
 
 ![The board: four Done, one Needs you, one Refused](images/board-orientation.png)
 

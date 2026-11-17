@@ -4,11 +4,11 @@
 
 Lena wants to raise Ravi's limit to USD 7,000 for the holiday rush. Where should that limit live?
 
-- If it lives in the prompt, a change means a new prompt, new recordings and new tests. And a model can still be talked past it.
+- If it lives in the prompt, a change means a new prompt, new recordings and new tests. A model can also be talked past it.
 - If it lives in code, a finance lead cannot read it.
 
-Anthropic's red team tried to trick an agent into sending cloud credentials out. The attack worked 24 times in 25 tries. The
-only defence that held was outside the model
+Anthropic's red team tried to trick an agent into sending cloud credentials out. The attack worked 24 times in 25 tries.
+The only defence that held was outside the model
 ([How we contain Claude across products](https://www.anthropic.com/engineering/how-we-contain-claude)).
 
 So put the rules in one file that a finance lead can read. Then add a gate in code. The gate applies the rules before every
@@ -17,8 +17,7 @@ write. A gate is the code between a draft and a write. It allows the write, hold
 For example, the reference `policy.yaml` says `pay_usd_without_approval: 5000`. INV-2045 is for USD 6,200. So the gate says
 `needs_approval`, and the job waits for Lena.
 
-Change the limit to 7000 in the file. Now the same invoice pays at once. The
-prompt and the code do not change.
+Change the limit to 7000 in the file. Now the same invoice pays at once. The prompt and the code do not change.
 
 ```mermaid
 flowchart LR

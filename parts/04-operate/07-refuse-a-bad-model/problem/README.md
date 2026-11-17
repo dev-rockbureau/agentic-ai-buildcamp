@@ -5,13 +5,12 @@
 A teammate wrote a gate before you. It refuses a candidate when fewer than 90% of runs pass the evals. "Most runs pass" sounds
 safe. But what if the one run that slips is the duplicate invoice?
 
-Then 11 of 12 invoices are fine, and the one that is not
-is the must-never. An average hides exactly the failure that a gate is there to catch.
+Then 11 of 12 invoices are fine, and the one that is not is the must-never. An average hides exactly the failure that a gate
+is there to catch.
 
 For example, the gate runs 12 invoices. The planted model gets 11 right, and it misses `INV-2017`, the duplicate.
 
-That is
-11 / 12 = 91.7% of runs passing. 91.7% is above 90%, so the teammate's gate says `ALLOW`. It should say `REFUSE`.
+That is 11 / 12 = 91.7% of runs passing. 91.7% is above 90%, so the teammate's gate says `ALLOW`. It should say `REFUSE`.
 
 ```mermaid
 flowchart LR

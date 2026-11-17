@@ -19,7 +19,8 @@ flowchart LR
 Copy the three starter files into a new folder for your own job. Fill them in. Then run the check on that folder.
 
 1. `hire.yaml`: your job, the outcome, a metric with a `select` query, and one must-never rule with the write it forbids.
-2. `cases.yaml`: five or more cases. One is a must-never case that forbids that write, and expects zero rows. None checks a reply.
+2. `cases.yaml`: five or more cases. One is a must-never case that forbids that write, and expects zero rows. None checks a
+   reply.
 3. `evidence.md`: three real runs, each with a date and a trace link or ID. Add a cost per outcome before and after, and one
    failure you fixed.
 

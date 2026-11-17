@@ -5,8 +5,8 @@
 You found three ways the clerk fails. Next month, someone changes the prompt or swaps the model. Did the same failures come
 back? Without a check, the only way to know is to read 60 traces again. Nobody will do that.
 
-An **eval** is a small check that reads one run and says pass or fail. One eval per failure mode reads every run for you,
-the same way, every time.
+An **eval** is a small check that reads one run and says pass or fail. One eval per failure mode reads every run for you, the
+same way, every time.
 
 ```mermaid
 flowchart LR
@@ -21,8 +21,7 @@ flowchart LR
 In `evals/` in this folder, write one file for each mode in your `failure-modes.md`. The check reads those files from
 `count-the-failure-modes`. Name each eval exactly like its mode. For example, `evals/missed-the-duplicate.ts`.
 
-Start from
-`evals/_example.ts`. It shows the shape, and what a run holds.
+Start from `evals/_example.ts`. It shows the shape, and what a run holds.
 
 An eval is a small function. It returns `null` when the run passes. It returns one sentence on why the run fails. It reads
 what the world holds:
@@ -39,8 +38,8 @@ Return `null` for runs that the mode does not apply to. The duplicate eval has n
 For example, the eval `missed-the-duplicate` asks three questions about one run:
 
 1. Is there an earlier invoice in `run.other_invoices_on_load`? If not, return `null`.
-2. Does `run.ledger` show a payment? If it does, return a sentence such as "INV-2017 bills a load already billed on
-   INV-2012, and the ledger shows it paid".
+2. Does `run.ledger` show a payment? If it does, return a sentence such as "INV-2017 bills a load already billed on INV-2012,
+   and the ledger shows it paid".
 3. Is there a `DUPLICATE` dispute, or one waiting for approval? If there is, return `null`. If not, return a sentence.
 
 Then run your evals over the replay set:

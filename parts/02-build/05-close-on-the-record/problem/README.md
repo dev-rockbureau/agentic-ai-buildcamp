@@ -4,8 +4,8 @@
 
 The naive clerk trusts the answer to its call. It does not check the ledger. That one habit causes two mistakes.
 
-For example, the pay tool for INV-2043 (USD 1,580) writes the payment and then times out. The naive clerk sees an error.
-It tries again with a new key, and pays twice.
+For example, the pay tool for INV-2043 (USD 1,580) writes the payment and then times out. The naive clerk sees an error. It
+tries again with a new key, and pays twice.
 
 On another invoice, the checker makes the pay tool time out every time, and it writes nothing. The naive clerk still says
 "done".
@@ -24,8 +24,8 @@ flowchart LR
 After every write, read the ledger back. The ledger decides what happened.
 
 1. Call the write tool with your stable `Idempotency-Key`.
-2. The tool may answer with success, an error or a timeout. In every case, call `read_invoice` next. Look for a row with
-   your key in `payments` or `disputes`.
+2. The tool may answer with success, an error or a timeout. In every case, call `read_invoice` next. Look for a row with your
+   key in `payments` or `disputes`.
 3. If the row is there, report `done`. If not, try again with the same key. Use a few tries at most.
 4. If there is still no row, report `failed`. Give the ledger's reason, for example "The ledger shows no payment for
    INV-2009".

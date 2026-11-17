@@ -11,12 +11,12 @@ The evidence is four papers from the world's tools:
 3. The rate confirmation.
 4. The proof of delivery.
 
-The reads must also be in a trace. A trace is the record of everything one run did. Without it, nobody can tell later
-whether the agent looked at the papers or guessed.
+The reads must also be in a trace. A trace is the record of everything one run did. Without it, nobody can tell later whether
+the agent looked at the papers or guessed.
 
-For example, INV-2001 bills USD 3,920 linehaul and USD 385 fuel for load L-1001. The rate confirmation RC-1001 allows
-USD 3,920 linehaul and up to USD 400 fuel. The proof of delivery POD-1001 shows the load arrived. Only with all four
-papers can your employee say the invoice is clean.
+For example, INV-2001 bills USD 3,920 linehaul and USD 385 fuel for load L-1001. The rate confirmation RC-1001 allows USD
+3,920 linehaul and up to USD 400 fuel. The proof of delivery POD-1001 shows the load arrived. Only with all four papers can
+your employee say the invoice is clean.
 
 ```mermaid
 flowchart LR
@@ -40,12 +40,11 @@ When `POST /jobs` arrives with this JSON:
 2. Call `read_invoice`, `find_load`, `read_rate_confirmation` and `read_proof_of_delivery` on `WORLD_URL`. Send the job's
    tenant in the `X-Tenant` header.
 3. Write spans to `TRACE_DIR/<run_id>.jsonl`, in the `employee.trace/v1` format from
-   [CONTRACT.md](../../../../reference/CONTRACT.md). Write one `invoke_agent` span for the run. Write one `execute_tool`
-   span for each call.
+   [CONTRACT.md](../../../../reference/CONTRACT.md). Write one `invoke_agent` span for the run. Write one `execute_tool` span
+   for each call.
 4. Write nothing to the ledger yet.
 
-The starter kits already do this. If you built your own employee, this is the step where your loop first touches the
-world.
+The starter kits already do this. If you built your own employee, this is the step where your loop first touches the world.
 
 ## Done when
 
@@ -70,4 +69,4 @@ Expect: `Done. All 1 rules pass.`
 
 - **Span**: one timed piece of work in a trace, such as a tool call or a model call.
 - **Trace**: every span of one run, one JSON object per line.
-- **Run id**: the id of one try at a job. The trace file is named after it.
+- **Run ID**: the ID of one try at a job. The trace file is named after it.

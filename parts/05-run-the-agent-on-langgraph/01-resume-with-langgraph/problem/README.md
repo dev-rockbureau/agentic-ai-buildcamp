@@ -8,14 +8,14 @@ crash did not make it pay twice. You wrote that code by hand, and it works.
 Most teams do not write it by hand. They use a graph library, with a database behind it.
 
 LangGraph is that library. A **graph** is a list of steps, called nodes, joined by arrows. Your graph has two nodes: `decide`
-and `pay`. When the amount is over Lena's limit, `pay` calls `interrupt()`. That pauses the graph, and saves it in Postgres.
+and `pay`. When the amount is over Lena's limit, `pay` calls `interrupt()`. That pauses the graph and saves it in Postgres.
 
 Later, a new process can carry on from the pause.
 
 For example, run `7850` through the graph. `decide` runs. Then `pay` stops and waits for Lena. You kill the process.
 
-You start a
-new one, and answer "approved". The new process starts at `pay`, not at `decide`. The ledger gets one payment row.
+You start a new one, and answer "approved". The new process starts at `pay`, not at `decide`. The ledger gets one payment
+row.
 
 ```mermaid
 sequenceDiagram
@@ -38,7 +38,7 @@ Work in the `assignment/` folder. Open `graph.ts` or `graph.py`. Both nodes are 
    For Python: `uv add langgraph==1.2.21 langgraph-checkpoint-postgres==3.2.0 --project assignment`.
 2. Make `decide` choose to pay.
 3. Make `pay` call `interrupt()` when the amount is over your approval limit. It carries on only on "approved".
-4. Write one row to `payments`. The table has a unique key on `run_id`, so running `pay` twice is safe.
+4. Write one row to `payments`. The table has a unique key on `run_id`. So running `pay` twice is safe.
 5. Swap the in-memory saver for the Postgres checkpointer. Call its `setup()` once.
 
 Start the database first. The walkthrough in the part page has the commands.

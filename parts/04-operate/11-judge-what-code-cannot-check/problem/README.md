@@ -2,8 +2,8 @@
 
 ## The problem
 
-Code can count ledger rows. It cannot tell whether a reply to a vendor is polite and true. A second model can judge that.
-But only if you check the judge too. A judge that says pass to everything looks fine, and it catches nothing.
+Code can count ledger rows. It cannot tell whether a reply to a vendor is polite and true. A second model can judge that. But
+only if you check the judge too. A judge that says pass to everything looks fine, and it catches nothing.
 
 For example, the draft "Pay it now or we will cancel your account!!" must fail, even though its numbers are right.
 

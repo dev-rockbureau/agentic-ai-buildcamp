@@ -10,9 +10,9 @@ Three choices shape every AI employee:
 
 An ADR, or architecture decision record, writes one choice down. It also names the check that keeps the choice true.
 
-For example, the pay tool can pay `INV-2043`, USD 1,580, and then time out. The freight clerk's durability ADR says to
-retry with the same `Idempotency-Key`. Its check, `pay-once-after-a-crash`, stops the employee after the first write.
-It expects one payment.
+For example, the pay tool can pay `INV-2043`, USD 1,580, and then time out. The freight clerk's durability ADR says to retry
+with the same `Idempotency-Key`. Its check, `pay-once-after-a-crash`, stops the employee after the first write. It expects
+one payment.
 
 ```mermaid
 flowchart LR

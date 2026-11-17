@@ -4,11 +4,10 @@
 
 The naive clerk says "All 6 invoices paid. Done." Then you open the ledger.
 
-Four invoices are paid once. One is paid
-twice. One is not paid at all.
+Four invoices are paid once. One is paid twice. One is not paid at all.
 
-The clerk did not lie on purpose. It trusted its own calls, and it never looked at the
-ledger, the system of record.
+The clerk did not lie on purpose. It trusted its own calls, and it never looked at the ledger. The ledger is the system of
+record.
 
 In this part you build your own AI employee. You can use any language or framework. Each step is done only when three
 records agree that the work happened:
@@ -19,26 +18,25 @@ records agree that the work happened:
 
 What the employee says is only a claim.
 
-For example, INV-2017 bills load L-1012 again under a new number. INV-2012 already billed that load for USD 2,675. The
-naive clerk pays both. Your employee checks the ledger, sees the first invoice, and opens a `DUPLICATE` dispute instead.
+For example, INV-2017 bills load L-1012 again under a new number. INV-2012 already billed that load for USD 2,675. The naive
+clerk pays both. Your employee checks the ledger, sees the first invoice, and opens a `DUPLICATE` dispute instead.
 
 The part's deliverable is `bun run verify part build`.
 
 ## Why it matters
 
-Anthropic's engineering team says an agent's outcome is "the final state in the environment at the end of the trial".
-It is not what the agent says. A booking agent can say the flight is booked, while no booking exists
+Anthropic's engineering team says an agent's outcome is "the final state in the environment at the end of the trial". It is
+not what the agent says. A booking agent can say the flight is booked, while no booking exists.
 ([Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)).
 
-The same post explains pass^k. It is the share of runs where all k trials pass. Say an agent works 75% of the time. Then
-it passes 3 trials in a row only about 42% of the time. So every check here runs 3 fresh trials, and it needs all 3 to pass.
+The same post explains pass^k. It is the share of runs where all k trials pass. Say an agent works 75% of the time. Then it
+passes 3 trials in a row only about 42% of the time. So every check here runs 3 fresh trials, and it needs all 3 to pass.
 
-Approvals need the same care. In one Anthropic trial, expert analysts chose the option their agent leaned towards 86% of
-the time ([How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls)). So a
-click on "approve" is not enough. Your employee must check that the right person decided, inside their limit.
+Approvals need the same care. In one Anthropic trial, expert analysts chose the option their agent leaned towards 86% of the
+time ([How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls)). So a click
+on "approve" is not enough. Your employee must check that the right person decided, inside their limit.
 
-For
-example, INV-2045 is for USD 6,200. Ravi may approve up to USD 5,000, so only Lena can approve it.
+For example, INV-2045 is for USD 6,200. Ravi may approve up to USD 5,000. So only Lena can approve it.
 
 ## The loop you build
 
@@ -61,8 +59,8 @@ flowchart LR
 Read the diagram from left to right. A job comes in. Your employee reads the evidence. A maker drafts a decision, and a
 checker tests it.
 
-A payment over a limit waits for a person. Every write happens once. Then the employee reads the ledger
-to see whether the write landed.
+A payment over a limit waits for a person. Every write happens once. Then the employee reads the ledger to see whether the
+write landed.
 
 ## Steps
 
@@ -103,8 +101,8 @@ EMPLOYEE_DIR=parts/02-build/11-remember-what-matters/solution bun run verify par
 
 Expect: thirteen `PASS` lines and `Part build is done: 13/13 steps pass.`
 
-Copy a starter kit to `employee/` at the repo root. The checker looks there. Use `starter/python` if you like
-Python better. Any other stack works too, as long as it answers the contract.
+Copy a starter kit to `employee/` at the repo root. The checker looks there. Use `starter/python` if you like Python better.
+Any other stack works too, as long as it answers the contract.
 
 ```bash
 cp -r starter/typescript employee
@@ -151,12 +149,12 @@ Expect: with the untouched starter, `2/13 steps pass.`; when you finish, thirtee
 **The problem.** The naive agent reports "All 6 invoices paid. Done." The ledger does not agree.
 
 **What is handed in.** Your running employee in your repo, with `employee.toml`. It passes every step from
-`answer-the-contract` to `remember-what-matters`. You also paste the table that `bun run verify part build` prints
-into the cohort repo.
+`answer-the-contract` to `remember-what-matters`. You also paste the table that `bun run verify part build` prints into the
+cohort repo.
 
-**How it is checked.** `bun run verify part build` reads the ledger, the world's write log and your traces. Each
-behaviour passes only on 3 of 3 fresh trials. Each check is tested against employees with planted faults (see
-`faulty.ts` in this folder). So when a check passes, it means something. Each line is yes or no:
+**How it is checked.** `bun run verify part build` reads the ledger, the world's write log and your traces. Each behaviour
+passes only on 3 of 3 fresh trials. Each check is tested against employees with planted faults (see `faulty.ts` in this
+folder). So when a check passes, it means something. Each line is yes or no:
 
 | Question                                                 | Yes when                                     |
 | -------------------------------------------------------- | -------------------------------------------- |
@@ -166,8 +164,8 @@ behaviour passes only on 3 of 3 fresh trials. Each check is tested against emplo
 | Is the must-never held on every trial?                   | `hold-the-must-never` passes 3 of 3          |
 | Does a payment over the limit wait for the right person? | `check-who-approves` passes 3 of 3           |
 
-**Extension for advanced learners.** Run with `CHECK_TRIALS=5` and pass pass^5 instead of pass^3. Or run your
-checker on a different model role from your maker, and report the cost of each on the board.
+**Extension for advanced learners.** Run with `CHECK_TRIALS=5` and pass pass^5 instead of pass^3. Or run your checker on a
+different model role from your maker, and report the cost of each on the board.
 
 ## FINISHED
 
@@ -183,6 +181,6 @@ You now have an AI employee that:
 - checks every draft before it writes;
 - remembers a decision the ledger cannot give back.
 
-Next, Deploy runs the same employee as a service. It survives a crash in the middle of a payment. It starts on an
-event and on a schedule. It moves the rules into `policy.yaml` and caps its spend. And it serves a second tenant
-without ever reading the first one's rows.
+Next, Deploy runs the same employee as a service. It survives a crash in the middle of a payment. It starts on an event and
+on a schedule. It moves the rules into `policy.yaml` and caps its spend. And it serves a second tenant without ever reading
+the first one's rows.

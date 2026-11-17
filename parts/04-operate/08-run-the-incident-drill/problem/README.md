@@ -5,8 +5,8 @@
 The ledger goes down in the middle of the nightly batch. A **503** is the answer a server gives when it is down for a while.
 It means "Service Unavailable".
 
-For example, in the replay set four jobs got a 503 from the ledger. Each one gave up as `failed`. By morning, four invoices
-sat open, and nobody knew. That is your largest failure mode, `failed-on-a-ledger-error`.
+For example, in the replay set four jobs got a 503 from the ledger. Each one gave up as `failed`. By morning, four invoices sat
+open, and nobody knew. That is your largest failure mode, `failed-on-a-ledger-error`.
 
 Two other answers are worse. The clerk can retry in a tight loop, and hit the ledger hard as it comes back. Or it can put four
 alarm cards on the board for one outage.

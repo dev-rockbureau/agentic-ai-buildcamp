@@ -2,10 +2,11 @@
 
 ## The problem
 
-Eight runs failed out of 60. That is a number, not a plan. Finance asks which model to use. The engineers ask what to fix first.
+Eight runs failed out of 60. That is a number, not a plan. Finance asks which model to use. The engineers ask what to fix
+first.
 
-Both need the same thing: the failures grouped by what went wrong, with a count for each group.
-The biggest group is often not the model at all.
+Both need the same thing: the failures grouped by what went wrong, with a count for each group. The biggest group is often not
+the model at all.
 
 ```mermaid
 flowchart LR
@@ -18,10 +19,10 @@ flowchart LR
 
 ## Your challenge
 
-Fill the table in `failure-modes.md` in this folder. Use the runs that you labelled `fail` in `label-the-traces`. The check reads
-`labels.csv` from that step's folder.
+Fill the table in `failure-modes.md` in this folder. Use the runs that you labelled `fail` in `label-the-traces`. The check
+reads `labels.csv` from that step's folder.
 
-1. Read each failed run's reason and spans in the trace viewer again. Run `bun parts/04-operate/operate.ts traces`.
+1. Read each failed run's reason and spans again in the trace viewer. Run `bun parts/04-operate/operate.ts traces`.
 2. Ask: what went wrong first? Was it a draft the checker rejected, a tool call that failed, or an approval that never came?
 3. Give each group a verb-thing name that says what to fix, such as `missed-the-duplicate`. Never use a vague name like
    `agent-errors`.

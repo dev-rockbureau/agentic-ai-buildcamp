@@ -2,15 +2,16 @@
 
 ## The problem
 
-A container can be replaced at any time, for example for a new release. Your employee must not forget its work when that
-happens.
+A container can be replaced at any time, for example for a new release. When that happens, your employee must not forget
+its work.
 
 For example, INV-2045 is for USD 6,200, so it waits for Lena. She is in a meeting. Meanwhile, the container is replaced.
 
 - If the employee kept its jobs only in memory, Lena comes back to an empty Needs you column. The job is lost.
-- If it kept the job but not its steps, it reads every paper again. It also pays the model again for a draft it already had.
+- If it kept the job but not its steps, it reads every paper again. It also pays the model again for a draft it already
+  had.
 
-So save progress at the end of each unit of work. When you start, carry on from the last saved step.
+So save progress at the end of each unit of work. When the employee starts, it carries on from the last saved step.
 
 ```mermaid
 sequenceDiagram
@@ -34,9 +35,9 @@ Keep three things in `STATE_DIR`. A SQLite file is enough.
 2. Each approval and its status.
 3. Each finished step of a job: the evidence you read, and the model's draft.
 
-When your employee starts, load them. A job that was `working` carries on from its last saved step. A job that was
-`waiting_for_human` keeps waiting. Its approval is still in `GET /approvals`. When Lena approves after a restart, the job
-skips the steps it already finished.
+When your employee starts, it loads these three things. A job that was `working` carries on from its last saved step. A
+job that was `waiting_for_human` keeps waiting. Its approval is still in `GET /approvals`. When Lena approves after a
+restart, the job skips the steps it already finished.
 
 ## Done when
 

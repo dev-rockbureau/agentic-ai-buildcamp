@@ -16,9 +16,9 @@ This part comes before any agent code. You make five decisions:
 
 Each decision is a file. A check can read every file.
 
-For example, your hire letter names the must-never: "Pay the same load twice". It also names a SQL query that finds
-that mistake in the ledger. Today `INV-2012` and `INV-2017` both bill load `L-1012`, for USD 2,675 each. If both are
-paid, the query returns load `L-1012`. Anyone can see the rule broke.
+For example, your hire letter names the must-never: "Pay the same load twice". It also names a SQL query that finds that
+mistake in the ledger. Today `INV-2012` and `INV-2017` both bill load `L-1012`, for USD 2,675 each. If both are paid, the
+query returns load `L-1012`. Anyone can see the rule broke.
 
 ```mermaid
 flowchart LR
@@ -76,8 +76,8 @@ bun run verify write-the-hire-letter
 
 Expect: `Done. All 6 rules pass.`
 
-Write the acceptance cases in `03-turn-the-hire-into-tests/problem/acceptance.yaml`. The check reads your hire letter.
-It finds the write that your must-never case forbids.
+Write the acceptance cases in `03-turn-the-hire-into-tests/problem/acceptance.yaml`. The check reads your hire letter. It
+finds the write that your must-never case forbids.
 
 ```bash
 bun run verify turn-the-hire-into-tests
@@ -102,8 +102,8 @@ bun run verify price-the-outcome
 
 Expect: the cost lines end with `(matches within 1%)`, then `Done. All 6 rules pass.`
 
-Write three ADRs in `06-record-the-decisions/problem/adr/`. An ADR, or architecture decision record, is a short note.
-It names one design choice and says why you made it.
+Write three ADRs in `06-record-the-decisions/problem/adr/`. An ADR, or architecture decision record, is a short note. It names
+one design choice and says why you made it.
 
 ```bash
 bun run verify record-the-decisions

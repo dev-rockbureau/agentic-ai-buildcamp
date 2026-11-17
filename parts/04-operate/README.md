@@ -7,28 +7,29 @@ The clerk works. Now finance asks two questions:
 1. What does one settled invoice cost?
 2. Is a model that is about twenty times cheaper per call safe to use?
 
-Nobody can answer yet, because nobody has read what the clerk does in production.
+Nobody can answer yet. Nobody has read what the clerk does in production.
 
 In this part, you answer both questions:
 
 1. You put cost per outcome on the board. An **outcome** is one invoice that the clerk finished, paid or not.
 2. You read 60 real runs, and label each one pass or fail.
-3. You group the fails into kinds. You turn each kind into an **eval**, a small check that runs on every trace.
+3. You group the fails into kinds. You turn each kind into an **eval**. An eval is a small check that runs on every trace.
 4. You build a **gate**. It refuses a cheaper model that would leave a duplicate invoice open.
 5. You practise the night the ledger goes down.
 6. You finish with a five-minute demo.
 
 For example, the replay set has 60 runs. `bun parts/04-operate/operate.ts traces` prints this line first:
 
-> "The replay set: 60 runs of the
-> clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)."
+> "The replay set: 60 runs of the clerk in production (49 done, 2 waiting, 4 stopped, 5 failed)."
 
-The 5 failed runs still cost money, so the board counts them too.
+The 5 failed runs still cost money. So the board counts them too.
 
-Why a gate, and not a quick try? The machine you test on changes the score. Anthropic saw a 6 point swing on one agent
-benchmark, from the machine setup alone. So a gate keeps everything the same except the model. It runs three times, and every
-trial must pass
-([Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise), read 2026-11-12).
+Why use a gate, and not a quick try? The machine you test on changes the score. Anthropic saw a 6 point swing on one agent
+benchmark. The swing came from the machine setup alone.
+
+So a gate keeps everything the same except the model. It runs three times, and every trial must pass
+([Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise),
+read 2026-11-12).
 
 ```mermaid
 flowchart LR
@@ -63,21 +64,20 @@ The same picture is in `operate-loop.mmd`.
 | [judge-what-code-cannot-check](11-judge-what-code-cannot-check/problem/README.md) | `judge.yaml`: a rubric checked against human labels                      | 20      |
 | [run-it-on-your-own-job](12-run-it-on-your-own-job/problem/README.md)             | a world pack and evidence for your own job                               | 30      |
 
-`show-cost-per-outcome`, `run-the-swap-gate` and `refuse-a-bad-model` are core. A PM can do steps 2 to 7 and 9
-alone: they are files, and the gate runs the part's sample clerk.
+`show-cost-per-outcome`, `run-the-swap-gate` and `refuse-a-bad-model` are core. A PM can do steps 2 to 7 and 9 alone. They
+are files, and the gate runs the part's sample clerk.
 
 **What is in this folder.**
 
-- `kit.ts` is the sample clerk for this part. It is the reference clerk with a model setting, an honest board, and
-  a pause when the ledger is down. `MODEL_ROLE` picks the role in `config/models.ts`. `REPLAY_DIR` picks the
-  recorded replies.
+- `kit.ts` is the sample clerk for this part. It is the reference clerk with a model setting, an honest board, and a pause
+  when the ledger is down. `MODEL_ROLE` picks the role in `config/models.ts`. `REPLAY_DIR` picks the recorded replies.
 - `02-label-the-traces/runs/` is the replay set: 60 runs of the clerk in production, on the `smart` role.
 - `06-run-the-swap-gate/models/` holds the recorded models the gate can run: `smart`, `fast` and the planted
   `fast-misses-the-duplicate`.
 - `operate.ts` runs the trace viewer, your evals and the gate.
 
-Your own employee plays steps 1 and 8. To gate it, give it `MODEL_ROLE`. Then point `employee` in `gate.toml` at
-it, with a live provider.
+Your own employee plays steps 1 and 8. To gate it, give it `MODEL_ROLE`. Then point `employee` in `gate.toml` at it, with a
+live provider.
 
 ## Walkthrough
 
@@ -89,8 +89,8 @@ bun run verify show-cost-per-outcome
 
 Expect: `Done. All 1 rules pass.`
 
-Open the replay set and label at least 30 runs in `02-label-the-traces/problem/labels.csv`, the ones that did not
-end `done` first.
+Open the replay set and label at least 30 runs in `02-label-the-traces/problem/labels.csv`. Start with the ones that did
+not end `done`.
 
 ```bash
 bun parts/04-operate/operate.ts traces
@@ -98,8 +98,8 @@ bun parts/04-operate/operate.ts traces
 
 Expect: `The replay set: 60 runs of the clerk in production (49 done, 2 waiting, 4 stopped, 5 failed).`
 
-The trace viewer keeps running on `localhost:7703`. Open it in your browser. Run the next commands in a second
-terminal, and press Ctrl+C to stop the viewer when you are done.
+The trace viewer keeps running on `localhost:7703`. Open it in your browser. Run the next commands in a second terminal,
+and press Ctrl+C to stop the viewer when you are done.
 
 ```bash
 bun run verify label-the-traces
@@ -115,7 +115,7 @@ bun run verify count-the-failure-modes
 
 Expect: `Done. All 5 rules pass.`
 
-Write one eval per mode in `04-write-an-eval-per-failure/problem/evals/`, then run them over the replay set.
+Write one eval per mode in `04-write-an-eval-per-failure/problem/evals/`. Then run them over the replay set.
 
 ```bash
 bun parts/04-operate/operate.ts evals parts/04-operate/04-write-an-eval-per-failure/problem
@@ -200,8 +200,8 @@ Part operate is done: 12/12 steps pass.
 
 **The problem.** Finance asks whether a cheaper model is safe. Nobody has read the traces.
 
-**What you hand in.** `labels.csv`, `failure-modes.md`, `evals/`, `gate.toml` and `gate.md`, `runbook.md`, and
-`demo.md` with the recording link, as the part's deliverable: `bun run verify part operate`.
+**What you hand in.** `labels.csv`, `failure-modes.md`, `evals/`, `gate.toml` and `gate.md`, `runbook.md`, and `demo.md`
+with the recording link. The part's deliverable is `bun run verify part operate`.
 
 **How it is checked.** Every rule is yes or no:
 
@@ -216,8 +216,8 @@ Part operate is done: 12/12 steps pass.
 | Does the write-up state cost per outcome before and after a swap, matching the gate within 2%? | Script plus peer |
 | Does the write-up name one failure mode, the eval that catches it, and the fix?                | Peer, yes or no  |
 
-**Extension.** Add a model judge for one failure mode that code cannot check, and report how often it agrees with
-your labels. Judge calibration in depth belongs to the Evals workshop.
+**Extension.** Add a model judge for one failure mode that code cannot check. Then report how often it agrees with your
+labels. Judge calibration in depth belongs to the Evals workshop.
 
 ## Finished
 
@@ -226,13 +226,12 @@ You now have an employee you can run as a service, not a demo. You have:
 - a board that prices each outcome from the traces, with failed runs counted;
 - 60 labelled runs and failure modes with counts;
 - an eval per mode, proven to catch its mode;
-- a swap gate that allowed a model about twenty times cheaper per outcome, and refused one that leaves a duplicate
-  open;
+- a swap gate that allowed a model about twenty times cheaper per outcome, and refused one that leaves a duplicate open;
 - a runbook, and an employee that survives a ledger outage;
 - a five-minute demo with a scorecard.
 
-This is the last part. The deliverable for the whole course is every part's `bun run verify part` table in your
-demo. From here, the sibling courses go deeper where this one stops:
+This is the last part. The deliverable for the whole course is every part's `bun run verify part` table in your demo. From
+here, the sibling courses go deeper where this one stops:
 
 - the Evals workshop: judges and eval CI;
 - the Deploy workshop: identity, canary releases and rollback;

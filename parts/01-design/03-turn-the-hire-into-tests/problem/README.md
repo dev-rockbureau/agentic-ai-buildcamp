@@ -4,8 +4,8 @@
 
 A test that reads only the reply still passes when the agent says "Paid!" and pays twice.
 
-The truth is in the ledger. A load has one payment row, or none. So each acceptance case says which rows the ledger
-holds after the job.
+The truth is in the ledger. A load has one payment row, or none. So each acceptance case says which rows the ledger holds
+after the job.
 
 For example, the job is `INV-2041`, a clean invoice for USD 1,910. The case expects one row in `payments` with
 `amount_usd: 1910`, and no row in `disputes`.
@@ -27,12 +27,14 @@ Write at least five cases for your employee in `acceptance.yaml`:
 - One **approval** case that names who approves.
 - Edge cases, such as a timeout or a hidden instruction inside a document.
 
-Each case follows `acceptance.schema.json`. A case has `name`, `kind` (outcome, must-never, approval or edge), `given`
-and `job`. It may also have `forbids` and `approver`. `expect` is a list. Each row has `table`, `where`, `rows` and `values`.
+Each case follows `acceptance.schema.json`. A case has `name`, `kind` (outcome, must-never, approval or edge), `given` and
+`job`. It may also have `forbids` and `approver`. `expect` is a list. Each row has `table`, `where`, `rows` and `values`.
 
-`job` is the contract's job input, such as the invoice ID `INV-2045`. Add a `decide` block with `decision` and `by`
-when a person answers an approval. A job that waits for a person is not in the ledger yet. It waits in your employee's
-`GET /approvals`. So that row uses `route: "GET /approvals?status=waiting"` in place of `table`.
+`job` is the contract's job input, such as the invoice ID `INV-2045`. Add a `decide` block with `decision` and `by` when a
+person answers an approval.
+
+A job that waits for a person is not in the ledger yet. It waits in your employee's `GET /approvals`. So that row uses
+`route: "GET /approvals?status=waiting"` in place of `table`.
 
 | Employee                    | Trap case to write                                 |
 | --------------------------- | -------------------------------------------------- |
