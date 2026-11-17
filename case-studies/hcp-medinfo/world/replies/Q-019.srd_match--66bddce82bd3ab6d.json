@@ -1,0 +1,11 @@
+{
+  "label": "Q-019.srd_match",
+  "role": "fast",
+  "reply": "{\"doc_id\": \"SRD-ORV-MISSED-DOSE@1\", \"coverage\": \"full\"}",
+  "usage": {
+    "input_tokens": 410,
+    "output_tokens": 195,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

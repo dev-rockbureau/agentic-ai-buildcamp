@@ -2,7 +2,8 @@
 //
 //   seed                  reset the database and load the synthetic world
 //   check                 reseed, then run the check's rules against the solution in pipeline.toml
-//                         (so far: firewall, retrieval, delivery, identity, routes, safety, audit)
+//                         (firewall, retrieval, delivery, identity, verification, routes,
+//                         safety, audit)
 //   scan <question_id>    the safety scan alone (safe to run again)
 //   ask <question_id>     the safety scan, then the graph until it waits for review
 //   resume <question_id>  carry on a paused question with its recorded decision
@@ -20,6 +21,7 @@ import { checkRoutes } from "./lib/routes";
 import { checkSafety } from "./lib/safety";
 import { seed } from "./lib/seed";
 import { invocation, runSolution, solutionName } from "./lib/solution";
+import { checkVerification } from "./lib/verification";
 import { readQuestions } from "./lib/world";
 
 const SOLUTION_COMMANDS = ["scan", "ask", "resume", "review"];
@@ -43,9 +45,12 @@ async function check(): Promise<number> {
     printLines("delivery", await checkDelivery()),
     printLines("identity", await checkIdentity()),
   ];
-  // The rules below look at every question, so ask the ones no rule has asked yet.
+  // Ask every question no rule has asked yet, before the verification rule withdraws a source
+  // (T12). A withdrawal changes what every later search finds, so asking after it would search
+  // a different library from the one the replies were recorded against.
   for (const question of readQuestions()) runSolution(["ask", question.id]);
   results.push(
+    printLines("verification", await checkVerification()),
     printLines("routes", await checkRoutes()),
     printLines("safety", await checkSafety()),
     printLines("audit", await checkAudit()),

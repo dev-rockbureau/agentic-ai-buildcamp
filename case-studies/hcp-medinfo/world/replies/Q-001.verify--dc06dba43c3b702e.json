@@ -1,0 +1,11 @@
+{
+  "label": "Q-001.verify",
+  "role": "judge",
+  "reply": "{\"claims\": [{\"sentence\": 1, \"status\": \"supported\", \"quote\": \"If the next day has already started, skip the missed dose and take the next dose at the usual time.\"}, {\"sentence\": 2, \"status\": \"supported\", \"quote\": \"Never take two doses on the same day.\"}]}",
+  "usage": {
+    "input_tokens": 458,
+    "output_tokens": 93,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

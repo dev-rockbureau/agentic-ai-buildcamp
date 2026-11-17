@@ -1,0 +1,11 @@
+{
+  "label": "Q-019.adapt_srd",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Yes, she can still take her Orvelan tablet today, as long as it is within 12 hours of her usual time.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}, {\"text\": \"She should not take two doses on the same day.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}, {\"text\": \"If the next day has already started, she should skip the missed dose and take the next dose at the usual time.\", \"cites\": [\"SRD-ORV-MISSED-DOSE@1#2\"]}]}",
+  "usage": {
+    "input_tokens": 330,
+    "output_tokens": 202,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic, then edited by hand for trap T17: the first sentence said to take the dose as soon as possible on the same day, and now adds a 12-hour limit the SRD doesn't contain"
+}

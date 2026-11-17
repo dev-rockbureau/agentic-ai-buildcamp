@@ -13,6 +13,7 @@ class Run(TypedDict, total=False):
     passages: list[dict]
     srd_match: dict | None
     draft: list[dict]
+    verifier: dict | None
     model_problems: list[str]
     queue: str | None
     reasons: list[str]

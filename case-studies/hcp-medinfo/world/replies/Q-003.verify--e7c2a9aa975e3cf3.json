@@ -1,0 +1,11 @@
+{
+  "label": "Q-003.verify",
+  "role": "judge",
+  "reply": "{\"claims\": [{\"sentence\": 1, \"status\": \"supported\", \"quote\": \"Zentrava tablets may be crushed and mixed with about 30 mL of water, then taken right away.\"}, {\"sentence\": 2, \"status\": \"supported\", \"quote\": \"Crushed tablets gave the same blood levels as whole tablets.\"}, {\"sentence\": 3, \"status\": \"supported\", \"quote\": \"In study ZEN-BE-07, 24 healthy adults took one 20 mg tablet either whole or crushed in water. Exposure was the same within 5% for both ways of taking it.\"}, {\"sentence\": 4, \"status\": \"supported\", \"quote\": \"Giving crushed tablets through a feeding tube has not been studied.\"}]}",
+  "usage": {
+    "input_tokens": 723,
+    "output_tokens": 238,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

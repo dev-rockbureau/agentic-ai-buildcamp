@@ -8,7 +8,7 @@ confidence is never used: the route reads topics, the SRD match and (from step 6
 import re
 from functools import partial
 
-from medinfo import model_steps
+from medinfo import model_steps, verifier
 from medinfo.audit import record_alone
 from medinfo.policy import load_policy
 from medinfo.run_state import Run, trace
@@ -113,6 +113,20 @@ def choose_queue(run: Run, topics_policy: dict) -> tuple[str | None, list[str]]:
     flagged = [topic for topic in topics if topic in topics_policy["escalate_with_draft"]]
     if flagged:
         return "full_review", [f"topic: {topic}" for topic in flagged]
+    flags = (run.get("verifier") or {}).get("flags", [])
+    if flags:
+        return "full_review", [f"verifier: sentence {flag['sentence']}" for flag in flags]
     if run["srd_match"]["coverage"] != "full":
         return "full_review", [f"SRD coverage: {run['srd_match']['coverage']}"]
-    return "light_check", ["one SRD fully answers it, and no topic is flagged"]
+    return "light_check", ["one SRD fully answers it, no topic is flagged, every claim checks out"]
+
+
+def verify(run: Run) -> dict:
+    """The verifier on the draft. Every flag sends the question to full review."""
+    trace("verify")
+    if not run.get("draft"):
+        return {"verifier": None}
+    passages = {passage["chunk_id"]: passage["text"] for passage in run["passages"]}
+    result = verifier.verify(run["question_id"], "verify", run["draft"], passages)
+    record_alone("graph", run["question_id"], "verify", result)
+    return {"verifier": result}

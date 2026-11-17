@@ -7,10 +7,15 @@ resume <question_id>                       carry on a paused question with its r
 review list                                the items waiting for review
 review show <item_id>                      one item: question, queue, draft and citations
 review approve <item_id> --reviewer <id>   sign the draft, then resume the question
+review edit <item_id> --reviewer <id> --edit <n>:<words>   change sentence n, verify, sign, resume
 review sign <item_id> --reviewer <id>      sign only; `resume` sends it later
 review reject <item_id> --reviewer <id> --reason <text>
 review set-country <item_id> --reviewer <id> --country <code>   data steward: run it again
 review close <item_id> --reviewer <id> --reason <text>          data steward: no answer is sent
+
+approve, edit and sign take --override <n>:<reason> for each sentence the verifier flags: signing
+is refused while any flag has no reason. If a cited source was withdrawn or changed, nothing is
+signed and the question is redrafted.
 
 Every review decision asks for the reviewer's PIN at a hidden prompt (or reads it from standard
 input when that isn't a terminal).
@@ -70,26 +75,55 @@ def ask_command(question_id: str) -> str:
     return f"{scan_command(question_id)}\n{graph.ask(question_id)}"
 
 
-# What each decision needs besides the reviewer and PIN, and what the CLI says once it's recorded.
-DECISIONS = {
-    "approve": (review_service.approve, None, "Signed"),
-    "sign": (review_service.approve, None, "Signed"),
+# The decisions that sign. The others need one more value, and say what they did.
+SIGNING = ("approve", "edit", "sign")
+OTHER_DECISIONS = {
     "reject": (review_service.reject, "reason", "Rejected"),
     "set-country": (review_service.set_country, "country", "Country set"),
     "close": (review_service.close, "reason", "Closed"),
 }
 
 
-def decide(arguments: argparse.Namespace) -> str:
-    record, needs, done = DECISIONS[arguments.action]
-    extra = [getattr(arguments, needs)] if needs else []
-    if needs and not extra[0]:
+def by_sentence(values: list[str] | None, flag: str) -> dict[int, str]:
+    """--edit and --override values: "<sentence number>:<words>"."""
+    found = {}
+    for value in values or []:
+        number, _, words = value.partition(":")
+        if not number.strip().isdigit() or not words.strip():
+            raise review_service.RefusedError(f"--{flag} takes <sentence number>:<words>.")
+        found[int(number)] = words.strip()
+    return found
+
+
+def record_decision(arguments: argparse.Namespace, signer: review_service.Signer) -> str:
+    if arguments.action in SIGNING:
+        edits = by_sentence(arguments.edit, "edit")
+        if arguments.action == "edit" and not edits:
+            raise review_service.RefusedError("review edit needs at least one --edit.")
+        overrides = by_sentence(arguments.override, "override")
+        review_service.sign(arguments.item_id, signer, review_service.Signing(edits, overrides))
+        return "Edited and signed" if edits else "Signed"
+    record, needs, done = OTHER_DECISIONS[arguments.action]
+    value = getattr(arguments, needs)
+    if not value:
         raise review_service.RefusedError(f"review {arguments.action} needs --{needs}.")
-    record(arguments.item_id, arguments.reviewer, read_pin(), *extra)
+    record(arguments.item_id, signer, value)
+    return done
+
+
+def decide(arguments: argparse.Namespace) -> str:
+    signer = review_service.Signer(arguments.reviewer, read_pin())
+    question_id = question_of(arguments.item_id)
+    try:
+        done = record_decision(arguments, signer)
+    except review_service.InvalidatedError as invalidated:
+        # The invalidation is recorded. Resume now, so the question is searched and redrafted.
+        redone = resume_command(question_id)
+        raise review_service.RefusedError(f"{invalidated}\n{redone}") from invalidated
     said = f"{done} by {arguments.reviewer}."
     if arguments.action == "sign":
-        return f"{said} Run resume {question_of(arguments.item_id)} to send it."
-    return f"{said}\n{resume_command(question_of(arguments.item_id))}"
+        return f"{said} Run resume {question_id} to send it."
+    return f"{said}\n{resume_command(question_id)}"
 
 
 def resume_command(question_id: str) -> str:
@@ -110,12 +144,14 @@ def parser() -> argparse.ArgumentParser:
     review = commands.add_parser("review").add_subparsers(dest="action", required=True)
     review.add_parser("list")
     review.add_parser("show").add_argument("item_id")
-    for action in DECISIONS:
+    for action in (*SIGNING, *OTHER_DECISIONS):
         decision = review.add_parser(action)
         decision.add_argument("item_id")
         decision.add_argument("--reviewer", required=True)
         decision.add_argument("--reason")
         decision.add_argument("--country")
+        decision.add_argument("--edit", action="append")
+        decision.add_argument("--override", action="append")
     return top
 
 

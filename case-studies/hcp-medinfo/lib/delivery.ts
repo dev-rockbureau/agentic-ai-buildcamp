@@ -137,7 +137,8 @@ const REPLIES = `select m.question_id, m.text, m.signature_hash, i.citations,
   (d.signature_hash = m.signature_hash and d.signed_at <= m.sent_at) as signed_ok
   from outbox.messages m join review.items i on i.question_id = m.question_id
   left join lateral (select signature_hash, signed_at from review.decisions
-    where item_id = i.id and action = 'approve' order by id desc limit 1) d on true
+    where item_id = i.id and action in ('approve', 'edit')
+    order by id desc limit 1) d on true
   where m.kind = 'reply'`;
 const VERSIONS = "select doc_id, version, content_hash from knowledge.documents";
 

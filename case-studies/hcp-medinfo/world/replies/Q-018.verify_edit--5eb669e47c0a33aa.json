@@ -1,0 +1,11 @@
+{
+  "label": "Q-018.verify_edit",
+  "role": "judge",
+  "reply": "{\"claims\": [{\"sentence\": 1, \"status\": \"unsupported\", \"quote\": \"\"}, {\"sentence\": 2, \"status\": \"supported\", \"quote\": \"If needed, the dose can be raised to 10 mg once daily after 4 weeks. Do not exceed 10 mg per day.\"}]}",
+  "usage": {
+    "input_tokens": 448,
+    "output_tokens": 316,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

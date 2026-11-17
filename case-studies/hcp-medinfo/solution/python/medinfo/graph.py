@@ -18,7 +18,14 @@ from langgraph.types import Command, interrupt
 from psycopg.types.json import Jsonb
 
 from medinfo import gateway, knowledge_service
-from medinfo.answer_nodes import choose_queue, draft, extract_questions, srd_match, topic_check
+from medinfo.answer_nodes import (
+    choose_queue,
+    draft,
+    extract_questions,
+    srd_match,
+    topic_check,
+    verify,
+)
 from medinfo.audit import record, record_alone
 from medinfo.database import checkpointer, connect
 from medinfo.policy import load_policy
@@ -29,11 +36,11 @@ QUESTION = "select requester_id, text from medical.questions where id = %s"
 # One item per question. A repeat with the same queue and draft changes nothing and returns no
 # row. A question that runs again after the steward sets a country updates its item.
 UPSERT_ITEM = """insert into review.items
-  (id, thread_id, question_id, queue, draft, citations, reasons, due_at)
-  values (%s, %s, %s, %s, %s, %s, %s, %s)
+  (id, thread_id, question_id, queue, draft, citations, verifier, reasons, due_at)
+  values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
   on conflict (id) do update set queue = excluded.queue, draft = excluded.draft,
-    citations = excluded.citations, reasons = excluded.reasons, due_at = excluded.due_at,
-    status = 'waiting'
+    citations = excluded.citations, verifier = excluded.verifier, reasons = excluded.reasons,
+    due_at = excluded.due_at, status = 'waiting'
   where review.items.queue is distinct from excluded.queue
     or review.items.draft is distinct from excluded.draft
   returning id"""
@@ -41,9 +48,12 @@ DECISION = "select action from review.decisions where id = %s"
 # Where each decision sends the question next.
 NEXT_NODE = {
     "approve": "send",
+    "edit": "send",
     "reject": "close",
     "close": "close",
     "set_country": "load_context",
+    # A cited source was withdrawn or changed before signing: search again and redraft.
+    "invalidate": "retrieve",
 }
 FINISH_ITEM = "update review.items set status = %s, reasons = reasons || %s where id = %s"
 SET_STATUS = "update medical.questions set status = %s where id = %s"
@@ -55,6 +65,7 @@ FRESH = {
     "passages": [],
     "srd_match": None,
     "draft": [],
+    "verifier": None,
     "model_problems": [],
 }
 
@@ -125,7 +136,8 @@ def queue_item(run: Run) -> None:
     item_id = f"RV-{question_id}"
     draft_or_none = Jsonb(run["draft"]) if run.get("draft") else None
     item = (item_id, question_id, question_id, run["queue"], draft_or_none)
-    rest = (Jsonb(citations(run)), run["reasons"], run["due_at"])
+    verified = Jsonb(run["verifier"]) if run.get("verifier") else None
+    rest = (Jsonb(citations(run)), verified, run["reasons"], run["due_at"])
     with connect("graph") as connection:
         if connection.execute(UPSERT_ITEM, (*item, *rest)).fetchone():
             connection.execute(SET_STATUS, ("waiting", question_id))
@@ -210,6 +222,7 @@ NODES = (
     retrieve,
     srd_match,
     draft,
+    verify,
     route,
     acknowledge,
     review,
@@ -229,11 +242,12 @@ def build_graph(saver: PostgresSaver):
     builder.add_conditional_edges("topic_check", after_topics, ["route", "retrieve"])
     builder.add_conditional_edges("retrieve", after_search, ["srd_match", "route"])
     builder.add_edge("srd_match", "draft")
-    builder.add_edge("draft", "route")
+    builder.add_edge("draft", "verify")
+    builder.add_edge("verify", "route")
     builder.add_conditional_edges("route", after_route, ["redirect", "review", "acknowledge"])
     builder.add_edge("acknowledge", "review")
     # Setting a country sends the question back to the start, now that it has one.
-    review_next = ["send", "close", "load_context"]
+    review_next = ["send", "close", "load_context", "retrieve"]
     builder.add_conditional_edges(
         "review", lambda run: NEXT_NODE[run["decision_action"]], review_next
     )

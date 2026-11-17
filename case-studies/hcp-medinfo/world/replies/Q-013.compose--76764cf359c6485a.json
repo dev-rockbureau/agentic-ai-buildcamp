@@ -1,0 +1,11 @@
+{
+  "label": "Q-013.compose",
+  "role": "smart",
+  "reply": "{\"sentences\": [{\"text\": \"Grapefruit juice increases exposure to orvelastat, the active substance in Orvelan.\", \"cites\": [\"PI-ORV-EU@2#4\"]}, {\"text\": \"Large amounts of grapefruit juice should be avoided.\", \"cites\": [\"PI-ORV-EU@2#4\"]}]}",
+  "usage": {
+    "input_tokens": 433,
+    "output_tokens": 118,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}

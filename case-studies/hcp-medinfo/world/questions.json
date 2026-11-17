@@ -124,5 +124,12 @@
     "channel": "contact_center_email",
     "received_at": "2026-11-06T11:00:00Z",
     "text": "What is the usual starting dose of Orvelan?"
+  },
+  {
+    "id": "Q-019",
+    "requester_id": "D-US-02",
+    "channel": "contact_center_email",
+    "received_at": "2026-11-06T13:20:00Z",
+    "text": "My patient forgot her Orvelan tablet this morning and remembered in the evening. Can she still take it today?"
   }
 ]

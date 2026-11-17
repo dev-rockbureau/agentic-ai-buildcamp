@@ -127,8 +127,17 @@
       "trap": "T15",
       "queue": "full_review",
       "outcome": "sent",
-      "reviewer_edit": { "from": "5 mg", "to": "10 mg" },
+      "reviewer_edit": { "sentence": 1, "from": "5 mg", "to": "2.5 mg" },
       "override_required": true,
+      "safety_packet": false
+    },
+    "Q-019": {
+      "trap": "T17",
+      "queue": "full_review",
+      "outcome": "waiting",
+      "draft": true,
+      "must_cite": ["SRD-ORV-MISSED-DOSE@1"],
+      "verifier_decides_route": true,
       "safety_packet": false
     }
   },
@@ -148,6 +157,7 @@
     "T13": "The process is killed while paused. Resume on the same thread_id, send once.",
     "T14": "A cited source changes after signing, the text doesn't. The gateway refuses.",
     "T15": "A reviewer edit adds a number not in the source. Signing needs an override reason.",
-    "T16": "Known misses of the rules-only safety scan. No packet, reported as known misses."
+    "T16": "Known misses of the rules-only safety scan. No packet, reported as known misses.",
+    "T17": "An SRD fully answers, but the recorded draft adds a number the SRD lacks. Only the verifier sends it to full review."
   }
 }

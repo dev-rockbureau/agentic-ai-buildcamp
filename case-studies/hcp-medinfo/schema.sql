@@ -138,13 +138,18 @@ create table review.decisions (
   reviewer_id text not null references review.reviewers (id),
   -- set_country and close are the data steward's two ways to finish an identity_resolution item.
   action text not null check (
-    action in ('approve', 'edit', 'send_back', 'reject', 'escalate', 'set_country', 'close')
+    action in (
+      'approve', 'edit', 'send_back', 'reject', 'escalate', 'set_country', 'close', 'invalidate'
+    )
   ),
   reason_code text,
   final_text text,
   diff text,
   meaning text,
   override_reasons jsonb,
+  -- The signed sentences with their citations, and the verifier's result on exactly those words.
+  final_sentences jsonb,
+  verification jsonb,
   -- What the signature covers besides the text: doc_id@version@content_hash of each cited source.
   signed_sources text[],
   signature_hash text,

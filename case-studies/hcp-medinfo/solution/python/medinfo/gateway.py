@@ -23,7 +23,7 @@ ATTEMPTS = 3
 REQUESTER = "select requester_id from medical.questions where id = %s"
 ITEM = "select id, citations from review.items where question_id = %s"
 SIGNED = """select final_text, signature_hash, signed_sources from review.decisions
-  where item_id = %s and action = 'approve' order by id desc limit 1"""
+  where item_id = %s and action in ('approve', 'edit') order by id desc limit 1"""
 INSERT = """insert into outbox.messages (id, question_id, kind, recipient_id, text, signature_hash)
   values (%s, %s, %s, %s, %s, %s) on conflict do nothing"""
 

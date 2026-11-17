@@ -13,6 +13,8 @@ export type Expected = {
   outcome?: string;
   change_after_signing?: string;
   known_miss?: string;
+  queue_after_redraft?: string;
+  reviewer_edit?: { sentence: number; from: string; to: string };
   queue?: string | null;
   draft?: boolean;
   searched?: boolean;

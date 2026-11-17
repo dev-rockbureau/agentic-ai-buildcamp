@@ -1,0 +1,11 @@
+{
+  "label": "Q-019.extract_questions",
+  "role": "fast",
+  "reply": "{\"questions\": [\"Can the patient still take her Orvelan tablet today if she forgot her morning dose and remembered in the evening?\"]}",
+  "usage": {
+    "input_tokens": 174,
+    "output_tokens": 48,
+    "cache_read_input_tokens": 0
+  },
+  "source": "recorded on anthropic"
+}
