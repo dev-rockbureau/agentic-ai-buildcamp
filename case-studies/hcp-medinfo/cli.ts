@@ -2,28 +2,33 @@
 //
 //   seed                  reset the database and load the synthetic world
 //   check                 reseed, then run the check's rules against the solution in pipeline.toml
-//                         (so far: firewall, retrieval, delivery)
-//   ask <question_id>     run one question until it waits for review
+//                         (so far: firewall, retrieval, delivery, identity, safety, audit)
+//   scan <question_id>    the safety scan alone (safe to run again)
+//   ask <question_id>     the safety scan, then the graph until it waits for review
 //   resume <question_id>  carry on a paused question with its recorded decision
 //   review <...>          the reviewer CLI: list, show, approve, sign, reject
 //
 // ask, resume and review run the solution named in pipeline.toml.
 // Start Postgres first: docker compose -f case-studies/hcp-medinfo/compose.yml up -d --wait
 import { spawnSync } from "node:child_process";
+import { checkAudit } from "./lib/audit";
 import { checkDelivery } from "./lib/delivery";
 import { checkFirewall, type Line } from "./lib/firewall";
+import { checkIdentity } from "./lib/identity";
 import { checkRetrieval } from "./lib/retrieval";
+import { checkSafety } from "./lib/safety";
 import { seed } from "./lib/seed";
-import { invocation, solutionName } from "./lib/solution";
+import { invocation, runSolution, solutionName } from "./lib/solution";
+import { readQuestions } from "./lib/world";
 
-const SOLUTION_COMMANDS = ["ask", "resume", "review"];
+const SOLUTION_COMMANDS = ["scan", "ask", "resume", "review"];
 
 function printLines(rule: string, lines: Line[]): boolean {
   let failed = false;
   for (const line of lines) {
     const detail = line.detail ? ` (${line.detail})` : "";
-    console.log(`  ${line.result.toUpperCase().padEnd(7)} ${rule}: ${line.says}${detail}`);
-    if (line.result !== "pass") failed = true;
+    console.log(`  ${line.result.toUpperCase().padEnd(10)} ${rule}: ${line.says}${detail}`);
+    if (line.result === "fail") failed = true;
   }
   return failed;
 }
@@ -35,7 +40,11 @@ async function check(): Promise<number> {
     printLines("firewall", await checkFirewall()),
     printLines("retrieval", await checkRetrieval()),
     printLines("delivery", await checkDelivery()),
+    printLines("identity", await checkIdentity()),
   ];
+  // The rules below look at every question, so ask the ones no rule has asked yet.
+  for (const question of readQuestions()) runSolution(["ask", question.id]);
+  results.push(printLines("safety", await checkSafety()), printLines("audit", await checkAudit()));
   const failed = results.some(Boolean);
   console.log(failed ? "Some lines did not pass." : "Every line passes.");
   return failed ? 1 : 0;
@@ -55,7 +64,7 @@ async function main(): Promise<number> {
   }
   if (command === "check") return check();
   if (SOLUTION_COMMANDS.includes(command)) return passThrough([command, ...rest]);
-  console.error("Usage: bun run hcp <seed | check | ask | resume | review>");
+  console.error("Usage: bun run hcp <seed | check | scan | ask | resume | review>");
   return 2;
 }
 

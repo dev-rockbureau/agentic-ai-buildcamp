@@ -9,7 +9,8 @@ import {
   withRole,
 } from "./database";
 
-export type Line = { says: string; result: "pass" | "fail"; detail?: string };
+// "known miss" marks a documented limit, such as the rules-only safety scan missing T16.
+export type Line = { says: string; result: "pass" | "fail" | "known miss"; detail?: string };
 
 type Attempt = {
   says: string;
@@ -21,6 +22,7 @@ type Attempt = {
 
 const SEND_ONE = `insert into outbox.messages (id, question_id, kind, recipient_id, text)
   values ('M-FIREWALL', 'Q-001', 'reply', 'D-US-01', 'firewall check')`;
+const SET_COUNTRY = "update shared.doctors set country = 'US' where id = 'D-XX-01'";
 const ADD_AUDIT_ENTRY = `insert into audit.entries
   (question_id, seq, type, payload, prev_hash, hash)
   values ('Q-FIREWALL', 1, 'firewall_check', '{}', 'start', 'firewall')`;
@@ -53,6 +55,30 @@ const ATTEMPTS: Attempt[] = [
     role: "safety_scan",
     sql: "select 1 from knowledge.documents limit 1",
     expect: INSUFFICIENT_PRIVILEGE,
+  },
+  {
+    says: "reviewer_cli can't change a doctor's country",
+    role: "reviewer_cli",
+    sql: SET_COUNTRY,
+    expect: INSUFFICIENT_PRIVILEGE,
+  },
+  {
+    says: "steward_cli can't read the approved library",
+    role: "steward_cli",
+    sql: "select 1 from knowledge.documents limit 1",
+    expect: INSUFFICIENT_PRIVILEGE,
+  },
+  {
+    says: "steward_cli can't write to the outbox",
+    role: "steward_cli",
+    sql: SEND_ONE,
+    expect: INSUFFICIENT_PRIVILEGE,
+  },
+  {
+    says: "steward_cli can set a doctor's country",
+    role: "steward_cli",
+    sql: SET_COUNTRY,
+    expect: "allowed",
   },
   {
     says: "gateway can write to the outbox",

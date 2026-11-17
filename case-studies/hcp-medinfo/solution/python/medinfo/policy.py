@@ -1,6 +1,7 @@
 """The pipeline's rules, read from policy.yaml. Nothing in the solution hard-codes a rule."""
 
 import datetime
+import hashlib
 import os
 import pathlib
 
@@ -25,3 +26,9 @@ def today(policy: dict) -> datetime.date:
 def allowed_uses(policy: dict, requester_kind: str) -> list[str]:
     """Which kinds of approved document a doctor or a rep may be answered from."""
     return policy["approved_use"][requester_kind]
+
+
+def policy_version() -> str:
+    """A short hash of policy.yaml, so each audit entry says which rules were in force."""
+    content = (CASE_STUDY_DIR / "policy.yaml").read_bytes()
+    return hashlib.sha256(content).hexdigest()[:12]

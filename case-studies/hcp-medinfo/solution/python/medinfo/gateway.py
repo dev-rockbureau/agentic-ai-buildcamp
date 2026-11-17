@@ -11,6 +11,7 @@ from dataclasses import dataclass
 import psycopg
 from psycopg import IsolationLevel, errors
 
+from medinfo.audit import record
 from medinfo.database import connect
 from medinfo.knowledge_service import current_version, why_not_allowed
 from medinfo.policy import load_policy
@@ -50,9 +51,17 @@ def send_acknowledgment(question_id: str, queue: str, due_at: str | None) -> Sen
     text = ACKNOWLEDGMENT.format(question_id=question_id, queue=queue.replace("_", " "), due=due)
     with connect("gateway") as connection:
         recipient = _requester(connection, question_id)
-        values = (f"A-{question_id}", question_id, "acknowledgment", recipient.id, text, None)
-        connection.execute(INSERT, values)
+        message_id = f"A-{question_id}"
+        values = (message_id, question_id, "acknowledgment", recipient.id, text, None)
+        _insert_once(connection, question_id, values)
     return Sent(True)
+
+
+def _insert_once(connection: psycopg.Connection, question_id: str, values: tuple) -> None:
+    """Write the message and its audit entry. A repeat hits the unique key and writes neither."""
+    if connection.execute(INSERT, values).rowcount == 1:
+        message = {"message_id": values[0], "kind": values[2], "signature_hash": values[5]}
+        record(connection, question_id, "message_sent", message)
 
 
 def _current_sources(connection: psycopg.Connection, citations: list[dict]) -> list[dict | None]:
@@ -78,12 +87,16 @@ def _checked_send(connection: psycopg.Connection, question_id: str, policy: dict
     item = connection.execute(ITEM, (question_id,)).fetchone()
     signed = connection.execute(SIGNED, (item["id"],)).fetchone() if item else None
     if signed is None or signed["signature_hash"] is None:
-        return Sent(False, "unsigned")
-    reason = _refusal(signed, _current_sources(connection, item["citations"]), requester, policy)
+        reason = "unsigned"
+    else:
+        current = _current_sources(connection, item["citations"])
+        reason = _refusal(signed, current, requester, policy)
     if reason:
+        # The refusal is recorded in the same transaction as the checks that made it.
+        record(connection, question_id, "send_refused", {"reason": reason})
         return Sent(False, reason)
     values = (f"M-{question_id}", question_id, "reply", requester.id, signed["final_text"])
-    connection.execute(INSERT, (*values, signed["signature_hash"]))
+    _insert_once(connection, question_id, (*values, signed["signature_hash"]))
     return Sent(True)
 
 

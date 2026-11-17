@@ -12,7 +12,7 @@ do $$
 declare
   role_name text;
 begin
-  foreach role_name in array array['graph', 'safety_scan', 'gateway', 'reviewer_cli', 'checker']
+  foreach role_name in array array['graph', 'safety_scan', 'gateway', 'reviewer_cli', 'steward_cli', 'checker']
   loop
     if not exists (select 1 from pg_roles where rolname = role_name) then
       execute format('create role %I login', role_name);
@@ -136,7 +136,10 @@ create table review.decisions (
   id bigserial primary key,
   item_id text not null references review.items (id),
   reviewer_id text not null references review.reviewers (id),
-  action text not null check (action in ('approve', 'edit', 'send_back', 'reject', 'escalate')),
+  -- set_country and close are the data steward's two ways to finish an identity_resolution item.
+  action text not null check (
+    action in ('approve', 'edit', 'send_back', 'reject', 'escalate', 'set_country', 'close')
+  ),
   reason_code text,
   final_text text,
   diff text,
@@ -189,6 +192,30 @@ create trigger entries_no_truncate
   before truncate on audit.entries
   for each statement execute function audit.refuse_change();
 
+-- Add one entry to a question's chain. Every module calls this, so the chain is built one way.
+-- The hash covers the previous hash, the type and the payload exactly as Postgres prints it
+-- (payload::text), so the check can recompute it from what it reads back. The advisory lock
+-- makes two writers on the same question take turns. It runs with the caller's own grants.
+create function audit.append(question text, entry_type text, entry_payload jsonb)
+returns bigint language plpgsql as $$
+declare
+  last_seq integer;
+  last_hash text;
+  new_id bigint;
+begin
+  perform pg_advisory_xact_lock(hashtext(question));
+  select seq, hash into last_seq, last_hash from audit.entries
+    where question_id = question order by seq desc limit 1;
+  last_seq := coalesce(last_seq, 0);
+  last_hash := coalesce(last_hash, repeat('0', 64));
+  insert into audit.entries (question_id, seq, type, payload, prev_hash, hash)
+    values (question, last_seq + 1, entry_type, entry_payload, last_hash,
+      encode(sha256(convert_to(last_hash || entry_type || entry_payload::text, 'UTF8')), 'hex'))
+    returning id into new_id;
+  return new_id;
+end
+$$;
+
 -- The firewall. Each grant below is one thing a module is allowed to do.
 
 -- graph: the Medical Question Helper. It reads the medical view and the approved library, writes
@@ -222,9 +249,19 @@ grant select on review.reviewers, review.items to reviewer_cli;
 grant select, insert on review.decisions to reviewer_cli;
 grant usage on sequence review.decisions_id_seq to reviewer_cli;
 
+-- steward_cli: the data steward's tool. The only role that may set a doctor's country, and only
+-- that column. It records the steward's decisions and can't read the library or send.
+grant usage on schema shared, medical, review, audit to steward_cli;
+grant select on shared.doctors, medical.questions to steward_cli;
+grant update (country) on shared.doctors to steward_cli;
+grant select on review.reviewers, review.items to steward_cli;
+grant select, insert on review.decisions to steward_cli;
+grant usage on sequence review.decisions_id_seq to steward_cli;
+
 -- Every module that does work adds audit entries and reads its chain to find the last hash.
-grant select, insert on audit.entries to graph, safety_scan, gateway, reviewer_cli;
-grant usage on sequence audit.entries_id_seq to graph, safety_scan, gateway, reviewer_cli;
+grant select, insert on audit.entries to graph, safety_scan, gateway, reviewer_cli, steward_cli;
+grant usage on sequence audit.entries_id_seq
+  to graph, safety_scan, gateway, reviewer_cli, steward_cli;
 
 -- checker: the check reads everything and writes nothing.
 grant pg_read_all_data to checker;

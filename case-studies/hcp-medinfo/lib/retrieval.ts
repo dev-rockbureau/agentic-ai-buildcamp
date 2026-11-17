@@ -12,6 +12,7 @@ export type Expected = {
   trap: string;
   outcome?: string;
   change_after_signing?: string;
+  known_miss?: string;
   queue?: string | null;
   draft?: boolean;
   searched?: boolean;

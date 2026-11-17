@@ -4,7 +4,14 @@ import postgres from "pg";
 
 export type DatabaseClient = postgres.Client;
 
-export const ROLES = ["graph", "safety_scan", "gateway", "reviewer_cli", "checker"] as const;
+export const ROLES = [
+  "graph",
+  "safety_scan",
+  "gateway",
+  "reviewer_cli",
+  "steward_cli",
+  "checker",
+] as const;
 export type Role = (typeof ROLES)[number] | "postgres";
 
 // Port 54330 matches compose.yml. HCP_DATABASE_HOST lets a different setup point elsewhere.

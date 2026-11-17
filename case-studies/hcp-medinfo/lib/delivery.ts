@@ -2,66 +2,24 @@
 // only while the signature still covers the exact text and the exact cited sources.
 // The check acts as the reviewer. It plants the T11 and T14 changes as the database owner, and it
 // kills the T13 run while that run waits for review.
+import {
+  type Citation,
+  checkerQuery,
+  decide,
+  decisionCount,
+  type Item,
+  line,
+  messageCount,
+  qualifiedReviewer,
+  readItem,
+} from "./checking";
 import { type DatabaseClient, withRole } from "./database";
 import type { Line } from "./firewall";
 import { readExpectations } from "./retrieval";
 import { runSolution, startSolution } from "./solution";
-import { readPolicy, readReviewers, sha256 } from "./world";
+import { sha256 } from "./world";
 
-type Citation = { doc_id: string; version: number; content_hash: string };
-type Item = {
-  id: string;
-  queue: string;
-  status: string;
-  reasons: string[];
-  citations: Citation[];
-  country: string | null;
-};
-
-const ITEM = `select i.id, i.queue, i.status, i.reasons, i.citations, d.country
-  from review.items i join medical.questions q on q.id = i.question_id
-  join shared.doctors d on d.id = q.requester_id where i.question_id = $1`;
-const COUNT_MESSAGES = "select count(*)::int as n from outbox.messages where question_id = $1";
 const WAIT_MS = 120_000;
-
-async function checkerQuery<Row>(sql: string, values: unknown[] = []): Promise<Row[]> {
-  return withRole("checker", async (client) => (await client.query(sql, values)).rows as Row[]);
-}
-
-async function readItem(questionId: string): Promise<Item | undefined> {
-  return (await checkerQuery<Item>(ITEM, [questionId]))[0];
-}
-
-async function messageCount(questionId: string, kind: string): Promise<number> {
-  const rows = await checkerQuery<{ n: number }>(`${COUNT_MESSAGES} and kind = $2`, [
-    questionId,
-    kind,
-  ]);
-  return rows[0].n;
-}
-
-// A reviewer the policy allows for this queue and country, with their PIN.
-function qualifiedReviewer(item: Item, qualified = true) {
-  const queues = readPolicy().queues as Record<string, { role: string }>;
-  const role = queues[item.queue].role;
-  const coversCountry = (countries: string[]) => countries.includes(item.country ?? "");
-  return readReviewers().find(
-    (reviewer) => reviewer.role === role && coversCountry(reviewer.countries) === qualified,
-  );
-}
-
-function decide(action: "approve" | "sign", itemId: string, reviewer: { id: string; pin: string }) {
-  return runSolution(["review", action, itemId, "--reviewer", reviewer.id], `${reviewer.pin}\n`);
-}
-
-function line(says: string, passed: boolean, detail?: string): Line {
-  return passed ? { says, result: "pass" } : { says, result: "fail", detail };
-}
-
-async function decisionCount(itemId: string): Promise<number> {
-  const sql = "select count(*)::int as n from review.decisions where item_id = $1";
-  return (await checkerQuery<{ n: number }>(sql, [itemId]))[0].n;
-}
 
 // Q-001: the wrong reviewer and the wrong PIN are refused, then the right reviewer signs and it
 // is sent once.
