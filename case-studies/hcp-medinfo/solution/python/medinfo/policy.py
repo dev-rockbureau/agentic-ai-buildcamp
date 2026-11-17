@@ -7,7 +7,11 @@ import pathlib
 
 import yaml
 
-CASE_STUDY_DIR = pathlib.Path(__file__).resolve().parents[3]
+# The case study folder, with policy.yaml and world/. The check sets HCP_CASE_STUDY_DIR when it
+# runs a copy of the solution from somewhere else, such as a planted mistake in a temporary folder.
+CASE_STUDY_DIR = pathlib.Path(
+    os.environ.get("HCP_CASE_STUDY_DIR") or pathlib.Path(__file__).resolve().parents[3]
+)
 
 
 def load_policy() -> dict:

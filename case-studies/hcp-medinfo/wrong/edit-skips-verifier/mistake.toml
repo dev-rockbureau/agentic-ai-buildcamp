@@ -1,0 +1,4 @@
+# A planted mistake. The gate lays these files over the solution, runs the check, and
+# expects every line in `fails` to fail.
+says = "A reviewer's edit keeps the draft's verification, so an edit that adds an unsupported number is signed with no reason."
+fails = ["verification: Q-018 (trap T15)"]

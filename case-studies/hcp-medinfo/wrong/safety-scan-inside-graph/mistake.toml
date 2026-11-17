@@ -1,0 +1,4 @@
+# A planted mistake. The gate lays these files over the solution, runs the check, and
+# expects every line in `fails` to fail.
+says = "The safety scan runs inside the graph, after the topic check, so a question that goes straight to the data steward is never scanned."
+fails = ["safety: Q-008 (trap T7)"]

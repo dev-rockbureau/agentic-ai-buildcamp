@@ -83,7 +83,8 @@ async function flaggedDraft(questionId: string): Promise<string | undefined> {
   if (!flags.some((flag) => flag.reasons.some((reason) => reason.includes("is not in a cited")))) {
     return "the verifier didn't flag a number missing from the source";
   }
-  const item = (await readItem(questionId)) as Item;
+  const item = await readItem(questionId);
+  if (!item) return `${questionId} never reached review`;
   const refused = decide("approve", item.id, signer(item));
   if (refused.status === 0 || (await decisionCount(item.id)) !== 0) {
     return "it was signed with no override reason";
@@ -98,8 +99,9 @@ async function flaggedDraft(questionId: string): Promise<string | undefined> {
 // T15: the reviewer's edit is checked again, refused without a reason, signed with one.
 async function editedDraft(questionId: string, edit: Edit): Promise<string | undefined> {
   runSolution(["ask", questionId]);
-  const item = (await readItem(questionId)) as Item;
-  const [row] = await checkerQuery<{ draft: Sentence[] }>(VERIFIER, [questionId]);
+  const item = await readItem(questionId);
+  const [row] = await checkerQuery<{ draft: Sentence[] | null }>(VERIFIER, [questionId]);
+  if (!item || !row?.draft) return `${questionId} never reached review with a draft`;
   const words = row.draft[edit.sentence - 1]?.text ?? "";
   if (!words.includes(edit.from)) return `sentence ${edit.sentence} doesn't say "${edit.from}"`;
   const change = ["--edit", `${edit.sentence}:${words.replace(edit.from, edit.to)}`];
@@ -128,11 +130,13 @@ const cites = (item: Item, documentKey: string) =>
 async function withdrawnWhileWaiting(questionId: string, expected: Expected) {
   const documentKey = expected.withdraw_while_waiting ?? "";
   runSolution(["ask", questionId]);
-  const before = (await readItem(questionId)) as Item;
+  const before = await readItem(questionId);
+  if (!before) return `${questionId} never reached review`;
   if (!cites(before, documentKey)) return `the draft doesn't cite ${documentKey}`;
   await withdraw(documentKey);
   if (decide("approve", before.id, signer(before)).status === 0) return "the old draft was signed";
-  const after = (await readItem(questionId)) as Item;
+  const after = await readItem(questionId);
+  if (!after) return "the review item is gone";
   if (cites(after, documentKey)) return `the redraft still cites ${documentKey}`;
   if (after.queue !== expected.queue_after_redraft) return `the redraft went to ${after.queue}`;
   decide("approve", after.id, signer(after));

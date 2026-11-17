@@ -42,14 +42,18 @@ export function solutionName(): string {
 function environment(): NodeJS.ProcessEnv {
   const venv = process.env.UV_PROJECT_ENVIRONMENT ?? join(tmpdir(), "hcp-medinfo-venv");
   // Environment variable names are UPPER_CASE, so this one is set by name, not as a property.
-  const names = Object.fromEntries([["UV_PROJECT_ENVIRONMENT", venv]]);
+  const names = Object.fromEntries([
+    ["UV_PROJECT_ENVIRONMENT", venv],
+    ["HCP_CASE_STUDY_DIR", CASE_STUDY_DIR],
+  ]);
   return { ...process.env, ...names };
 }
 
 // The full command line, the folder to run it in, and its environment.
 export function invocation(args: string[]) {
   const { commands } = readPipeline();
-  const cwd = join(CASE_STUDY_DIR, commands.directory);
+  // HCP_SOLUTION_DIR runs a copy instead, such as the solution with a planted mistake.
+  const cwd = process.env.HCP_SOLUTION_DIR ?? join(CASE_STUDY_DIR, commands.directory);
   return { command: [...commands.command, ...args], cwd, env: environment() };
 }
 

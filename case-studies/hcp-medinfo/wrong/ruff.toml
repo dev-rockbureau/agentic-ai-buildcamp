@@ -1,0 +1,5 @@
+# The planted mistakes are copies of the solution's files, so they follow its ruff settings.
+extend = "../solution/python/pyproject.toml"
+
+[lint.isort]
+known-first-party = ["medinfo"]

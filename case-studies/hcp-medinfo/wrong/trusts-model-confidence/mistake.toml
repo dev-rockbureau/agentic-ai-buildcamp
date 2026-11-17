@@ -1,0 +1,4 @@
+# A planted mistake. The gate lays these files over the solution, runs the check, and
+# expects every line in `fails` to fail.
+says = "The route trusts the SRD matcher's \"full\" over the verifier, so a draft that adds an unsupported number still goes to a light check."
+fails = ["routes: Q-019 (trap T17)"]
