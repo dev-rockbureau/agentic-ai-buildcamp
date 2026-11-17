@@ -25,6 +25,7 @@ join knowledge.documents d on d.doc_id = c.doc_id and d.version = c.version
 cross join asked
 where d.status = 'approved'
   and d.effective_date <= %(today)s and %(today)s < d.expiry_date
+  and %(country)s::text = %(country)s::text
   and d.approved_use = any(%(allowed_uses)s)
   and (cardinality(%(products)s::text[]) = 0 or d.product = any(%(products)s))
   and c.tsv @@ asked.terms

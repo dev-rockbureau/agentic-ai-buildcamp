@@ -1,4 +1,4 @@
-# A planted mistake. The gate lays these files over the solution, runs the check, and
-# expects every line in `fails` to fail.
-says = "The search forgets the country filter, so a doctor can be answered from an SRD that isn't approved in their country."
+# A planted mistake, in both solutions. The gate lays wrong/<mistake>/<solution>/ over that
+# solution, runs the check, and expects every line in `fails` to fail.
+says = "The country filter compares the requester's country with itself, so documents from every country get through."
 fails = ["retrieval: Q-002 (trap T2)"]

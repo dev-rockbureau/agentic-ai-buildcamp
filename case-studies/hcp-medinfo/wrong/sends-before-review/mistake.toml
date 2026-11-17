@@ -1,4 +1,4 @@
-# A planted mistake. The gate lays these files over the solution, runs the check, and
-# expects every line in `fails` to fail.
+# A planted mistake, in both solutions. The gate lays wrong/<mistake>/<solution>/ over that
+# solution, runs the check, and expects every line in `fails` to fail.
 says = "Light-check drafts are sent as soon as they are queued, and the gateway sends a draft that has no signature."
 fails = ["delivery: every reply was signed before it was sent"]

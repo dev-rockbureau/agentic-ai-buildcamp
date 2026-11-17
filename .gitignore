@@ -9,3 +9,5 @@ __pycache__/
 assignment/result.json
 test-results/
 .vscode/
+# Copies the HCP case study's gate makes for a planted mistake. Deleted after each run.
+.planted/

@@ -161,8 +161,8 @@ def _verification(connection: psycopg.Connection, item: dict, sentences: list[di
     """The draft's own verification when nothing was edited. An edit is verified again, on the
     exact words that will be signed."""
     # The draft was verified already, so the edit needs no second look.
-    if True:
-        return item["verifier"] or {"flags": []}
+    if item["verifier"]:
+        return item["verifier"]
     cited = sorted({chunk for sentence in sentences for chunk in sentence["cites"]})
     rows = connection.execute(CHUNKS, (cited,)).fetchall()
     passages = {row["chunk_id"]: row["text"] for row in rows}

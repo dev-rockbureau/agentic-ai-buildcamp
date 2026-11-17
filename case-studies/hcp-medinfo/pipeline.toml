@@ -1,7 +1,12 @@
 # Which solution `bun run hcp` runs, and how. The check starts it as a program and never imports it.
+# HCP_SOLUTION=typescript (or python) picks another table without editing this file.
 solution = "python"
 
 [python]
 directory = "solution/python"
 # The solution's command line. Arguments follow it: search Q-001, ask Q-001, review approve ...
 command = ["uv", "run", "--quiet", "python", "-m", "medinfo"]
+
+[typescript]
+directory = "solution/typescript"
+command = ["bun", "medinfo/main.ts"]

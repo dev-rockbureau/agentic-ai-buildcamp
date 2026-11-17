@@ -2,18 +2,19 @@
 // Each mistake must fail on the lines its mistake.toml names, so a mistake that breaks for an
 // unrelated reason doesn't count as caught.
 //
-// A mistake folder holds only the files that differ from the solution. The gate copies the
-// solution to a temporary folder outside the repo, lays the mistake's files over it, and points
-// the check at the copy with HCP_SOLUTION_DIR.
+// A mistake folder holds, for each solution, only the files that differ from it:
+// wrong/<mistake>/<solution>/. The gate copies the solution into .planted/, lays the mistake's
+// files over it, points the check at the copy with HCP_SOLUTION_DIR, and deletes the copy after.
+// The copy sits at the same depth as solution/<solution>/, so the TypeScript solution's imports of
+// config/models.ts and the repo's node_modules still resolve.
 import { cpSync, existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { named, type Result, runRules } from "./rules";
+import { solutionName } from "./solution";
 import { CASE_STUDY_DIR } from "./world";
 
 const WRONG_DIR = join(CASE_STUDY_DIR, "wrong");
-const SOLUTION_DIR = join(CASE_STUDY_DIR, "solution", "python");
-const COPIES_DIR = join(tmpdir(), "hcp-medinfo-wrong");
+const COPIES_DIR = join(CASE_STUDY_DIR, ".planted");
 
 export type Mistake = { name: string; says: string; fails: string[] };
 export type Verdict = { name: string; caught: boolean; detail: string };
@@ -32,20 +33,30 @@ export function readMistakes(): Mistake[] {
 
 // The solution with the mistake's files laid over it, in a fresh temporary folder.
 export function prepareMistake(name: string): string {
-  const copy = join(COPIES_DIR, name);
+  const solution = solutionName();
+  const planted = join(WRONG_DIR, name, solution);
+  if (!existsSync(planted)) throw new Error(`wrong/${name} has no ${solution}/ folder`);
+  const copy = join(COPIES_DIR, `${name}-${solution}`);
   rmSync(copy, { recursive: true, force: true });
   const keep = (path: string) => !path.includes("__pycache__") && !path.endsWith(".venv");
-  cpSync(SOLUTION_DIR, copy, { recursive: true, filter: keep });
-  const notToml = (path: string) => !path.endsWith("mistake.toml");
-  cpSync(join(WRONG_DIR, name), copy, { recursive: true, filter: notToml });
+  cpSync(join(CASE_STUDY_DIR, "solution", solution), copy, { recursive: true, filter: keep });
+  cpSync(planted, copy, { recursive: true });
   return copy;
 }
 
 // Run every rule against the solution, or against a mistake when one is named.
 export async function runAgainst(mistake?: string): Promise<Result[]> {
-  if (mistake) process.env.HCP_SOLUTION_DIR = prepareMistake(mistake);
-  else delete process.env.HCP_SOLUTION_DIR;
-  return runRules();
+  delete process.env.HCP_SOLUTION_DIR;
+  if (!mistake) return runRules();
+  const copy = prepareMistake(mistake);
+  process.env.HCP_SOLUTION_DIR = copy;
+  try {
+    return await runRules();
+  } finally {
+    rmSync(copy, { recursive: true, force: true });
+    if (readdirSync(COPIES_DIR).length === 0) rmSync(COPIES_DIR, { recursive: true });
+    delete process.env.HCP_SOLUTION_DIR;
+  }
 }
 
 // The same, but a check that crashes becomes one failing line instead of stopping the gate.

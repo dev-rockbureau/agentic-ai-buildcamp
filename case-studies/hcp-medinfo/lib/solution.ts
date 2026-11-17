@@ -29,9 +29,17 @@ export type Ran = { status: number | null; stdout: string; stderr: string };
 function readPipeline(): { name: string; commands: SolutionCommands } {
   const text = readFileSync(join(CASE_STUDY_DIR, "pipeline.toml"), "utf8");
   const pipeline = Bun.TOML.parse(text) as PipelineFile;
-  const commands = pipeline[pipeline.solution];
-  if (!commands) throw new Error(`pipeline.toml has no [${pipeline.solution}] table`);
-  return { name: pipeline.solution, commands };
+  const name = process.env.HCP_SOLUTION ?? pipeline.solution;
+  const commands = pipeline[name];
+  if (!commands) throw new Error(`pipeline.toml has no [${name}] table`);
+  return { name, commands };
+}
+
+// Every solution pipeline.toml describes: each table with a command.
+export function solutionNames(): string[] {
+  const text = readFileSync(join(CASE_STUDY_DIR, "pipeline.toml"), "utf8");
+  const pipeline = Bun.TOML.parse(text) as Record<string, unknown>;
+  return Object.keys(pipeline).filter((key) => typeof pipeline[key] === "object");
 }
 
 export function solutionName(): string {
@@ -57,10 +65,15 @@ export function invocation(args: string[]) {
   return { command: [...commands.command, ...args], cwd, env: environment() };
 }
 
+// No single solution command should take this long. One that does is stopped and counts as
+// failed, so a hung solution fails its lines instead of stopping the whole check.
+const COMMAND_LIMIT_MS = 120_000;
+
 // Run the solution to the end. `input` is written to its standard input, such as a PIN.
 export function runSolution(args: string[], input = ""): Ran {
   const { command, cwd, env } = invocation(args);
-  const run = spawnSync(command[0], command.slice(1), { cwd, env, input, encoding: "utf8" });
+  const options = { cwd, env, input, encoding: "utf8" as const, timeout: COMMAND_LIMIT_MS };
+  const run = spawnSync(command[0], command.slice(1), options);
   return { status: run.status, stdout: run.stdout, stderr: run.stderr };
 }
 
