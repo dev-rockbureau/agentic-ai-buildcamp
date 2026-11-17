@@ -2,10 +2,11 @@
 
 ## The problem
 
-KaaS Freight paid one carrier invoice twice last month. That cost USD 3,140, and many emails to get it back. The
-agent that did it said "done". Nobody checked the ledger.
+KaaS Freight paid one carrier invoice twice last month. That cost USD 3,140, and many emails to get it back. The agent
+that did it said "done". Nobody checked the ledger.
 
 In this course you hire an AI employee for KaaS Freight's invoice audit desk. You prove it never lets that happen.
+
 Before you build anything, you watch two employees work on the same six invoices. One believes its own reply. The
 reference believes only the ledger.
 
@@ -18,12 +19,12 @@ flowchart LR
 
 ## Your challenge
 
-Run the world, the naive employee and the reference. Then write what you saw in `notes.md` in this folder. Each
-line names one invoice id.
+Run the world, the naive employee and the reference. Then write what you saw in `notes.md` in this folder. Each line names
+one invoice ID.
 
-For example, the six invoices are `INV-2041` to `INV-2046`. `INV-2041` is a clean USD 1,910 invoice from carrier
-`CAR-06`, so both employees pay it once. That is why it does not go on any line below. Your lines name the
-invoices where something went wrong.
+For example, the six invoices are `INV-2041` to `INV-2046`. `INV-2041` is a clean USD 1,910 invoice from carrier `CAR-06`.
+Both employees pay it once. That is why it does not go on any line below. Your lines name the invoices where something went
+wrong.
 
 | Line          | What to write                                                          |
 | ------------- | ---------------------------------------------------------------------- |
@@ -62,6 +63,5 @@ More messages and their fixes are in [troubleshooting.md](../../../../00-orienta
 - **Ledger**: the system of record, a database the world keeps. An invoice is paid only when the ledger says so.
 - **Employee**: your agent. You hire it for one outcome, and it has one thing it must never do.
 - **Reference**: our finished employee. Your employee must pass the same checks.
-- **Board**: the page that shows each job as Done, Needs you or Refused. It also shows the cost per invoice
-  settled.
+- **Board**: the page that shows each job as Done, Needs you or Refused. It also shows the cost per invoice settled.
 - **Contract**: the six routes every employee answers. Because of it, the checker tests any stack the same way.

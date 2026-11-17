@@ -4,12 +4,11 @@
 
 Some facts never reach the ledger. Your employee must remember them itself.
 
-For example, Lena declined INV-2049, a USD 5,400 invoice. A decline writes nothing, so the ledger has no row for it.
-Then the carrier sends the invoice again, and a new job starts. An employee with no memory asks Lena the same question a
-second time.
+For example, Lena declined INV-2049, a USD 5,400 invoice. A decline writes nothing, so the ledger has no row for it. Then the
+carrier sends the invoice again, and a new job starts. An employee with no memory asks Lena the same question a second time.
 
-Memory is for facts like this one. These are things your employee learned that the world cannot give back. Keep memory
-small and exact. A wrong note can be trusted later, so keep it true
+Memory is for facts like this one. These are things your employee learned that the world cannot give back. Keep memory small
+and exact. A wrong note can be trusted later, so keep it true
 ([The components of agent memory](https://www.anthropic.com/engineering/components-of-agent-memory)).
 
 ```mermaid
@@ -31,8 +30,8 @@ sequenceDiagram
 Keep a small memory for each tenant. The memory must last through a restart. A tenant is one customer company, such as
 KaaS Freight.
 
-1. When a person declines, save a fact in `STATE_DIR`. The fact has the tenant, the invoice ID, `"fact": "declined"`,
-   the person who declined, and the job ID.
+1. When a person declines, save a fact in `STATE_DIR`. The fact has the tenant, the invoice ID, `"fact": "declined"`, the
+   person who declined, and the job ID.
 2. At the start of every job, read memory for the job's tenant only. Log a span named `x.memory` with
    `"x.memory.op": "read"`. Set `"x.tenant"` to the job's tenant. Log writes with `"x.memory.op": "write"`.
 3. If the invoice was declined, end the job as `declined`. Say who declined it. Do not ask again.

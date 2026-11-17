@@ -2,11 +2,12 @@
 
 ## The problem
 
-Finance asks what KaaS Dairy costs. The board shows one number for everyone, so nobody can say. Worse, Dairy's failed runs hide
-inside Freight's cost per invoice.
+Finance asks what KaaS Dairy costs. The board shows one number for everyone, so nobody can say. Worse, Dairy's failed runs
+hide inside Freight's cost per invoice.
 
-Each tenant needs its own three numbers: outcomes, spend, and cost per outcome. An outcome is an invoice that the ledger shows
-settled the right way. These numbers must match the traces. They must not come from a counter the employee keeps for itself.
+Each tenant needs its own three numbers: outcomes, spend, and cost per outcome. An outcome is an invoice that the ledger
+shows settled the right way. These numbers must match the traces. They must not come from a counter the employee keeps for
+itself.
 
 For example, the checker settles some KaaS Freight invoices and some KaaS Dairy invoices, such as INV-2053. Then `GET /board`
 must show one row for `kaas-freight` and one row for `kaas-dairy`. Say the ledger shows 2 Dairy invoices settled. Then the
@@ -25,8 +26,8 @@ flowchart LR
 Group `GET /board` by each job's tenant. Put one entry in `tenants` for each tenant. Give each entry `outcomes`, `spend_usd`
 and `cost_per_outcome_usd`.
 
-Count the spend of every run, including failed and waiting runs. Put `x.tenant` on every root span. Then the checker can add up
-the same numbers from your traces.
+Count the spend of every run, including failed and waiting runs. Put `x.tenant` on every root span. Then the checker can add
+up the same numbers from your traces.
 
 ## Done when
 
@@ -52,4 +53,5 @@ Expect: `Done. All 1 rules pass.`
 ## Words you will use
 
 - **Cost per outcome**: spend divided by the outcomes that the ledger agrees with.
-- **Dated price table**: prices in `config/models.ts`, with the date they were read. The checker refuses a table that is too old.
+- **Dated price table**: prices in `config/models.ts`, with the date they were read. The checker refuses a table that is too
+  old.

@@ -8,8 +8,8 @@ twenty times less per call. Finance asks: can we swap? "It looked fine when I tr
 A **swap gate** is a real answer. It runs the current model and the candidate model on the same invoices, with the same evals
 and the same acceptance cases. It runs them several times. Then it compares cost per outcome, not price per call.
 
-Small gaps can lie. Anthropic saw a 6 point swing on one agent benchmark, from the machine setup alone. They say not to trust a
-gap under 3 points until the setup is the same. So the gate keeps everything the same except the model
+Small gaps can lie. Anthropic saw a 6 point swing on one agent benchmark. The swing came from the machine setup alone. They say
+not to trust a gap under 3 points until the setup is the same. So the gate keeps everything the same except the model
 ([Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise)).
 
 For example, the sample answer ran both models 3 times on 12 invoices. `smart` cost $0.001268 per settled invoice. `fast` cost

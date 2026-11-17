@@ -2,8 +2,8 @@
 
 ## The problem
 
-An approve button that anyone can press does nothing useful. People also tend to follow what an agent leans towards.
-So the check on who decides must live in code, not in good intentions.
+An approve button that anyone can press does nothing useful. People also tend to follow what an agent leans towards. So the
+check on who decides must live in code, not in good intentions.
 
 For example, three people at KaaS Freight might answer the approval for INV-2045 (USD 6,200):
 
@@ -22,8 +22,8 @@ flowchart LR
 
 ## Your challenge
 
-Handle `POST /approvals/{approval_id}`. The body has two fields: `decision`, which is `approve` or `decline`, and `by`,
-which is the person's ID.
+Handle `POST /approvals/{approval_id}`. The body has two fields: `decision`, which is `approve` or `decline`, and `by`, which
+is the person's ID.
 
 1. Look the person up in `GET {WORLD_URL}/people`. Read their role, `may_approve`, `pay_limit_usd` and tenant.
 2. Answer `403` with a `reason` in three cases: they may not approve, the amount is over their limit, or they work for

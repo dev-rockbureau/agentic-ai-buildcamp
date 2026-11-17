@@ -4,17 +4,18 @@
 
 You built the clerk's pause and its saved progress by hand. That is the right way to learn them.
 
-But on a real team, nobody keeps a progress file by hand for long. They use a library that does it, and a database behind it.
+On a real team, nobody keeps a progress file by hand for long. They use a library that does it, with a database behind it.
 You need to know what that library does for you, and what it still leaves to you.
 
-For example, your Deploy employee saves each job in `STATE_DIR`, and it sends a stable Idempotency-Key. A graph library saves the
-same facts as checkpoints in Postgres. Your approval rule stays yours. Only the plumbing moves.
+For example, your Deploy employee saves each job in `STATE_DIR`. It also sends a stable Idempotency-Key. A graph library
+saves the same facts as checkpoints in Postgres. Your approval rule stays yours. Only the plumbing moves.
 
 ## Why it matters
 
-A pause that lives in a file on one machine is lost when that machine is lost. A pause in Postgres is not lost. Any new process
-can find it by name, and carry on. So teams run agents on a graph library with a database checkpointer. This part redoes one
-thing you built by hand, using that library.
+A pause that lives in a file on one machine is lost when that machine is lost. A pause in Postgres is not lost.
+
+Any new process can find it by name and carry on. So teams run agents on a graph library with a database checkpointer.
+This part redoes one thing you built by hand, using that library.
 
 ## What we teach
 
@@ -40,15 +41,15 @@ flowchart LR
 | ------------------------------------------------------------------- | --- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
 | [resume-with-langgraph](01-resume-with-langgraph/problem/README.md) | 30  | `assignment/graph.ts` or `graph.py`, a two-node graph | The lockfile, an interrupt, a checkpoint row, a resume, one ledger row |
 
-Work in the `assignment/` folder at the repo root. It has its own `compose.yml`, `ledger.sql` and check. The
-sample answer is in `01-resume-with-langgraph/solution/`, in TypeScript and Python.
+Work in the `assignment/` folder at the repo root. It has its own `compose.yml`, `ledger.sql` and check. The sample answer
+is in `01-resume-with-langgraph/solution/`, in TypeScript and Python.
 
 ## Options
 
 The tool in this part is LangGraph with the Postgres checkpointer. The runner-up is Google ADK.
 
 - **Choose when:** the team is on Google Cloud, or wants one framework across Python, TypeScript, Go and Java.
-- **Trade-off:** its session and resume model differs from the one you built by hand, so the mapping is less direct.
+- **Trade-off:** its session and resume model differs from the one you built by hand. So the mapping is less direct.
 
 ## Walkthrough
 
@@ -120,12 +121,12 @@ Expect: `Every line passes.` once your graph is built, and `assignment/result.js
 
 ## Assignment
 
-This part is optional in the live session and expected as homework. Work on it beside the class while the
-concepts are taught with the hand-built versions. The full task is in [assignment/README.md](../../assignment/README.md).
+This part is optional in the live session and expected as homework. Work on it beside the class while the concepts are
+taught with the hand-built versions. The full task is in [assignment/README.md](../../assignment/README.md).
 
 **What you hand in.** A branch named `assignment`, pushed, with your URL submitted. The grader reruns the same check.
 
 ## FINISHED
 
-You now know what a graph library takes off your hands: the pause, the saved state and the resume. You also
-know what it leaves with you: your approval rule, and a pay node that is safe to run twice.
+You now know what a graph library takes off your hands: the pause, the saved state and the resume. You also know what it
+leaves with you: your approval rule, and a pay node that is safe to run twice.

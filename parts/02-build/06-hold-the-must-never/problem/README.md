@@ -2,11 +2,11 @@
 
 ## The problem
 
-Your hire letter says what the clerk must never do. It must never pay an invoice twice. It must never pay above the
-rate confirmation without Lena. Two traps test these rules.
+Your hire letter says what the clerk must never do. It must never pay an invoice twice. It must never pay above the rate
+confirmation without Lena. Two traps test these rules.
 
-For example, INV-2017 bills load L-1012 for USD 2,675. But INV-2012 already billed the same load, for the same amount,
-three days earlier. So INV-2017 is a duplicate under a new invoice number.
+For example, INV-2017 bills load L-1012 for USD 2,675. But INV-2012 already billed the same load, for the same amount, three
+days earlier. So INV-2017 is a duplicate under a new invoice number.
 
 INV-2023 bills USD 4,100 linehaul. The rate confirmation allows USD 3,800. That is USD 300 above the rate.
 
@@ -28,8 +28,8 @@ Put the rule in code, between the draft and the write. There, the model cannot t
    - Linehaul is above the rate confirmation: dispute the difference with `ABOVE_RATE`.
    - Detention has no signed delay: `DETENTION_UNSIGNED`. Fuel above the cap: `FUEL_ABOVE_CONTRACT`.
 2. If the draft says pay and the rule says no, the rule wins.
-3. Open the dispute with `open_dispute`. Ravi may open a dispute up to USD 1,000 alone. A bigger dispute, such as the
-   USD 2,675 one for `INV-2017`, goes to `GET /approvals` for Lena instead.
+3. Open the dispute with `open_dispute`. Ravi may open a dispute up to USD 1,000 alone. A bigger dispute, such as the USD
+   2,675 one for `INV-2017`, goes to `GET /approvals` for Lena instead.
 
 ## Done when
 

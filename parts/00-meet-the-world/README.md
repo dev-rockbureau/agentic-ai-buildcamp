@@ -5,11 +5,11 @@
 When an agent says "done", it makes a claim. At KaaS Freight, a wrong claim costs real money. You cannot take back an
 invoice paid twice, or paid above the agreed rate.
 
-This part shows you three things. First, the world you work in. Second, an employee that believes its own reply.
-Third, the reference employee, which believes only the ledger.
+This part shows you three things. First, the world you work in. Second, an employee that believes its own reply. Third,
+the reference employee, which believes only the ledger.
 
-For example, the naive employee says `All 6 invoices paid. Done.` The ledger says something else. It shows 4 paid
-once, 1 paid twice, 1 not paid. Only the ledger tells the truth.
+For example, the naive employee says `All 6 invoices paid. Done.` The ledger says something else. It shows 4 paid once, 1
+paid twice, 1 not paid. Only the ledger tells the truth.
 
 ```mermaid
 flowchart LR

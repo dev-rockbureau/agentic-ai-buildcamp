@@ -2,8 +2,8 @@
 
 ## The problem
 
-An eval that never fails looks exactly like an eval that works. So does an eval that fails every run, until the team gets
-tired of the noise and turns it off.
+An eval that never fails looks exactly like an eval that works. So does an eval that fails every run. Eventually the team
+gets tired of the noise and turns it off.
 
 Before the swap gate trusts your evals, prove three things about each one:
 

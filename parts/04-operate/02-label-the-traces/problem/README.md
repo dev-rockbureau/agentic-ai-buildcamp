@@ -8,9 +8,11 @@ The board says how much. Only the traces say what went wrong.
 The **replay set** is the clerk in production. It is one nightly batch of 60 invoices, with one run each. Each run keeps the
 spans it wrote and the ledger rows it left.
 
-The employee's status is only a claim. `stopped` can be the right answer. For example, it may refuse an order hidden in a scan.
-`waiting_for_human` can be right too. An invoice for USD 6,200 must wait for Lena. Only the ledger, compared with the evidence,
-says pass or fail.
+The employee's status is only a claim. `stopped` can be the right answer. For example, it may refuse an order hidden in a
+scan.
+
+`waiting_for_human` can be right too. An invoice for USD 6,200 must wait for Lena. Only the ledger, compared with the
+evidence, says pass or fail.
 
 ```mermaid
 flowchart LR
@@ -74,6 +76,7 @@ Expect: `Done. All 5 rules pass.`
 
 ## Words you will use
 
-- **Trace**: the spans that one run wrote, one JSON line each. They include model calls, tool calls, the checker and the policy gate.
+- **Trace**: the spans that one run wrote, one JSON line each. They include model calls, tool calls, the checker and the
+  policy gate.
 - **Label**: your pass or fail for one run, with a note. It is never a score out of five.
 - **Replay set**: the fixed 60 runs that every learner labels, so the labels can be compared and checked.

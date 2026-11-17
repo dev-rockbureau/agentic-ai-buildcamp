@@ -8,11 +8,11 @@ The checker cannot read your mind or your code. It needs three things from your 
 2. One address to send jobs to.
 3. One answer that says "I am here, and I speak contract 1".
 
-An agent that lives in a notebook cannot be checked. A script that runs and then exits cannot be checked either. Nobody
-can prove that such an agent did any work.
+An agent that lives in a notebook cannot be checked. A script that runs and then exits cannot be checked either. Nobody can
+prove that such an agent did any work.
 
-For example, the reference employee is called `freight-audit-clerk`. When the checker sends `GET /health`, the answer
-lists the contract, the name and the company. KaaS Freight is the one company this part works for.
+For example, the reference employee is called `freight-audit-clerk`. When the checker sends `GET /health`, the answer lists
+the contract, the name and the company. KaaS Freight is the one company this part works for.
 
 ```mermaid
 sequenceDiagram
@@ -31,8 +31,8 @@ requests.
 
 1. Copy a starter kit to `employee/` at the repo root. Or start from your own framework. For example:
    `cp -r starter/typescript employee`, or `starter/python`.
-2. Open `employee/employee.toml`. Its `[contract]` table names the `start` command. The checker runs that command from
-   that folder. Keep `version = "1"`.
+2. Open `employee/employee.toml`. Its `[contract]` table names the `start` command. The checker runs that command from that
+   folder. Keep `version = "1"`.
 3. Read `PORT` from the environment. Listen on that port. The checker picks a free port for every trial.
 4. Answer `GET /health` with JSON that has these three fields:
 
@@ -57,8 +57,7 @@ Expect: `PASS` and `Done. All 1 rules pass.`
 
 ## If you get stuck
 
-- `did not answer GET /health within 10 s on the port in PORT`: you listen on a fixed port. Use `PORT` from the
-  environment.
+- `did not answer GET /health within 10 s on the port in PORT`: you listen on a fixed port. Use `PORT` from the environment.
 - `exited before it answered GET /health`: your start command runs a script that ends. It must stay up and serve.
 - `No employee.toml`: the file must sit in `employee/`, next to your code. Or set `EMPLOYEE_DIR` to its folder.
 - The full contract is in [CONTRACT.md](../../../../reference/CONTRACT.md). It also has the command-line form, for scripts

@@ -2,14 +2,15 @@
 
 ## The problem
 
-Finance looks at the model bill once a month. It asks one question: what does one settled invoice cost? A bill in tokens
-does not answer that. Cost per outcome does.
+Finance looks at the model bill once a month. It asks one question: what does one settled invoice cost? A bill in tokens does
+not answer that. Cost per outcome does.
 
 **Cost per outcome** is all model spend, divided by the invoices that the ledger shows settled the right way. All spend counts,
 including runs that failed or stopped.
 
 For example, the checker sends four jobs. Three end well in the ledger: two paid and one disputed. The fourth fails, because
-its pay call never writes. All four runs together cost $0.0045. So cost per outcome is $0.0045 / 3 = $0.0015, not $0.0045 / 4.
+its pay call never writes. All four runs together cost $0.0045. So cost per outcome is $0.0045 / 3 = $0.0015, not $0.0045 /
+4.
 
 An easy board lies in two ways:
 

@@ -10,11 +10,11 @@ To price one outcome:
 2. Multiply out the calls and the tokens.
 3. Compare the total with the value of one outcome.
 
-For example, Ravi spends about six minutes on a clean invoice. That is about USD 4 of his time. The freight clerk makes
-6 calls per run and 1.25 runs per invoice. On the `fast` role, that is $0.0045 per invoice.
+For example, Ravi spends about six minutes on a clean invoice. That is about USD 4 of his time. The freight clerk makes 6
+calls per run and 1.25 runs per invoice. On the `fast` role, that is $0.0045 per invoice.
 
-The UK government spends about GBP 20 million a year on staff to read consultation replies. Its tool saves that staff
-cost. The cost is the model calls.
+The UK government spends about GBP 20 million a year on staff to read consultation replies. Its tool saves that staff cost.
+The cost is the model calls.
 
 ```mermaid
 flowchart LR
@@ -35,8 +35,8 @@ Fill in `cost.yaml` in this folder. It follows `cost.schema.json`. Replace each 
 - The role, provider, date, source page and price per million tokens.
 - Your cost per outcome.
 
-For the role, write `fast`, `smart` or `judge` from `config/models.ts`. Never write a model name. Copy the price from
-the provider's page. Then run the calculator. It prints every sum.
+For the role, write `fast`, `smart` or `judge` from `config/models.ts`. Never write a model name. Copy the price from the
+provider's page. Then run the calculator. It prints every sum.
 
 ```bash
 bun run cost parts/01-design/05-price-the-outcome/problem/cost.yaml

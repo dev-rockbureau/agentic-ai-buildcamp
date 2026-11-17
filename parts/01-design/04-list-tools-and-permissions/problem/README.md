@@ -2,19 +2,18 @@
 
 ## The problem
 
-An agent can do only what its tools let it do. If `pay_invoice` has no approver, a hidden line in a PDF can move
-money.
+An agent can do only what its tools let it do. If `pay_invoice` has no approver, a hidden line in a PDF can move money.
 
 A tenant is one customer's data. If a search reads every tenant, the freight clerk can see KaaS Dairy's loads.
 
 So list every tool before Build writes one. For each tool, write its risk and who approves it.
 
-For example, `pay_invoice` is a final write. Ravi Shah approves payments up to USD 5,000. Lena Ortiz approves anything
-above that. So `INV-2045`, at USD 6,200, must wait for Lena. `read_invoice` only reads, so it needs no approver.
+For example, `pay_invoice` is a final write. Ravi Shah approves payments up to USD 5,000. Lena Ortiz approves anything above
+that. So `INV-2045`, at USD 6,200, must wait for Lena. `read_invoice` only reads, so it needs no approver.
 
-Ramp's policy agent reviews expenses. Ramp's engineers set it up so the agent handles more than 65% of approvals. When
-it is unsure, it sends the expense to a person as "Needs review". Ramp says more than 1,000 finance teams use it.
-Reviewers spend their time on the 10 to 15% that need judgement.
+Ramp's policy agent reviews expenses. Ramp's engineers set it up so the agent handles more than 65% of approvals. When it is
+unsure, it sends the expense to a person as "Needs review". Ramp says more than 1,000 finance teams use it. Reviewers spend
+their time on the 10 to 15% that need judgement.
 
 ```mermaid
 flowchart LR
@@ -27,8 +26,8 @@ flowchart LR
 
 ## Your challenge
 
-Fill in `tools.yaml` in this folder. List every tool your employee may call. Each tool follows `tools.schema.json`.
-Every tool has these fields:
+Fill in `tools.yaml` in this folder. List every tool your employee may call. Each tool follows `tools.schema.json`. Every
+tool has these fields:
 
 - `name`.
 - `does`: reads or writes.

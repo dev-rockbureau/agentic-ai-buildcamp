@@ -2,8 +2,8 @@
 
 ## The problem
 
-Drafts do not come only from your own model. KaaS Freight's intake agent reads carrier emails. It sends jobs with a
-draft already attached. A clerk that writes whatever draft it gets has only moved the mistake one agent down the line.
+Drafts do not come only from your own model. KaaS Freight's intake agent reads carrier emails. It sends jobs with a draft
+already attached. A clerk that writes whatever draft it gets has only moved the mistake one agent down the line.
 
 For example, two of the intake agent's drafts are wrong:
 

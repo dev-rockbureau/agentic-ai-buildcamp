@@ -2,12 +2,11 @@
 
 ## The problem
 
-Some payments need a person to say yes first. An agent that pays because the numbers match has done the sums. But it
-has skipped the company's rule. Asking a person is part of the job. The question must also sit where that person can
-find it.
+Some payments need a person to say yes first. An agent that pays because the numbers match has done the sums. But it has
+skipped the company's rule. Asking a person is part of the job. The question must also sit where that person can find it.
 
-For example, INV-2045 is clean, but it is for USD 6,200. Ravi Shah, the AP clerk, may approve up to USD 5,000. Anything
-over that goes to Lena Ortiz, the finance lead. So your employee must not pay INV-2045. It must ask Lena and wait.
+For example, INV-2045 is clean, but it is for USD 6,200. Ravi Shah, the AP clerk, may approve up to USD 5,000. Anything over
+that goes to Lena Ortiz, the finance lead. So your employee must not pay INV-2045. It must ask Lena and wait.
 
 ```mermaid
 sequenceDiagram
@@ -24,8 +23,8 @@ sequenceDiagram
 Pause before a write that is over the limit.
 
 1. Before `pay_invoice`, compare the amount with the limit for paying without approval: USD 5,000.
-2. If it is over, save an approval in your state. It has these fields: `approval_id`, `job_id`, `action`, `amount`,
-   `summary` and `approver_role`. End the run with status `waiting_for_human`. Write nothing.
+2. If it is over, save an approval in your state. It has these fields: `approval_id`, `job_id`, `action`, `amount`, `summary`
+   and `approver_role`. End the run with status `waiting_for_human`. Write nothing.
 3. Answer `GET /approvals?status=waiting` with the list of waiting approvals.
 
 ![The board's Needs you column with the USD 6,200 invoice waiting for Lena](../images/expected.png)

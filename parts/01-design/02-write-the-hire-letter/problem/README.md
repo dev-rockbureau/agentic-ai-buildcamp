@@ -10,12 +10,12 @@ A hire letter names three things:
 2. One number that you can query.
 3. One thing the employee must never do. The must-never comes with a query that would catch it.
 
-For example, the freight clerk's must-never is "Pay the same load twice". Its `check` query lists every load with more
-than one payment. If both `INV-2012` and `INV-2017` get paid, the query returns load `L-1012`.
+For example, the freight clerk's must-never is "Pay the same load twice". Its `check` query lists every load with more than
+one payment. If both `INV-2012` and `INV-2017` get paid, the query returns load `L-1012`.
 
 Chipotle's hiring assistant, Ava Cado, chats with candidates and books interviews. Offers go only to candidates that a
-manager picks. Chipotle says the time from application to start fell by about two thirds. The outcome is a person
-starting. The must-never is an offer with no manager.
+manager picks. Chipotle says the time from application to start fell by about two thirds. The outcome is a person starting.
+The must-never is an offer with no manager.
 
 ```mermaid
 flowchart LR
